@@ -27,7 +27,7 @@
           "name": "Vokzalna", 
           "mapX": 100, "mapY": 200,  
           "depth": 45,  
-          "altitude": 128,
+          "altitude": 83,
           "info": {
             "openingYear": 1961,
             "dailyPassengers": 35000,
@@ -40,7 +40,7 @@
           "name": "Universytet", 
           "mapX": 200, "mapY": 200, 
           "depth": 79, 
-          "altitude": 157,
+          "altitude": 78,
           "distanceFromPrevious": 1300,
           "info": {
             "openingYear": 1961,
@@ -54,7 +54,7 @@
           "name": "Khreshchatyk", 
           "mapX": 400, "mapY": 200, 
           "depth": 95, 
-          "altitude": 154,
+          "altitude": 59,
           "distanceFromPrevious": 1400,
           "info": {
             "openingYear": 1961,
@@ -68,7 +68,7 @@
           "name": "Arsenalna", 
           "mapX": 500, "mapY": 200, 
           "depth": 105, 
-          "altitude": 199,
+          "altitude": 94,
           "distanceFromPrevious": 1500,
           "info": {
             "openingYear": 1961,
@@ -81,7 +81,7 @@
         {
           "name": "Dnipro", 
           "mapX": 600, "mapY": 200,  
-          "depth": 91,  
+          "depth": -20,  
           "altitude": 111,
           "distanceFromPrevious": 1100,
           "info": {
