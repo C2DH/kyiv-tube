@@ -81,8 +81,8 @@
         {
           "name": "Dnipro", 
           "mapX": 600, "mapY": 200,  
-          "depth": 111,  
-          "altitude": 91,
+          "depth": 91,  
+          "altitude": 111,
           "distanceFromPrevious": 1100,
           "info": {
             "openingYear": 1961,
@@ -177,7 +177,7 @@
       "stops": [
         {
           "name": "San Giovanni", 
-          "mapX": 600, "mapY": 100,  
+          "mapX": 600, "mapY": 300,  
           "depth": 26,  
           "altitude": 57,
           "info": {
