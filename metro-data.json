@@ -1,0 +1,97 @@
+{
+  "metroName": "Kyiv Metropolitan",
+  "metroInfo": {
+    "description": "The Kyiv Metropolitan (Ukrainian: Kyivskyi Metropoliten) is a rapid transit system that operates in Kyiv, Ukraine. It started operation in 1961, making it the oldest metro system in Ukraine.",
+    "yearOpened": 1961,
+    "totalLength": 60,
+    "totalStations": 73,
+    "dailyRidership": 1500000,
+    "website": "https://www.atac.roma.it/",
+    "operatingHours": "5:30 AM - 11:30 PM",
+    "ticketPrice": "€1.50 (valid for 100 minutes)"
+  },
+  "lines": {
+    "M1": {
+      "color": "#FF0000",
+      "name": "Red Line",
+      "info": {
+        "yearOpened": 1980,
+        "length": 18.5,
+        "stations": 27,
+        "averageSpeed": 32,
+        "rollingStock": "MA-300 trains",
+        "history": "Line A was the second line of the Rome Metro system, opened in 1980 to connect the eastern and western parts of the city."
+      },
+      "stops": [
+        {
+          "name": "Vokzalna", 
+          "mapX": 250, "mapY": 200,  
+          "depth": 20,  
+          "altitude": 50,
+          "info": {
+            "openingYear": 1990,
+            "dailyPassengers": 35000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms"]
+          }
+        },
+        {
+          "name": "Universytet", 
+          "mapX": 250, "mapY": 200, 
+          "depth": 25, 
+          "altitude": 55,
+          "distanceFromPrevious": 1500,
+          "info": {
+            "openingYear": 1982,
+            "dailyPassengers": 28000,
+            "platformType": "Side",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Khreshchatyk", 
+          "mapX": 400, "mapY": 200, 
+          "depth": 30, 
+          "altitude": 60,
+          "distanceFromPrevious": 1200,
+          "info": {
+            "openingYear": 1982,
+            "dailyPassengers": 22000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms"]
+          }
+        },
+        {
+          "name": "Arsenalna", 
+          "mapX": 450, "mapY": 400, 
+          "depth": 25, 
+          "altitude": 55,
+          "distanceFromPrevious": 1300,
+          "info": {
+            "openingYear": 1980,
+            "dailyPassengers": 150000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms", "Shopping", "Food court"]
+          }
+        },
+        {
+          "name": "Dnipro", 
+          "mapX": 600, "mapY": 100,  
+          "depth": 26,  
+          "altitude": 57,
+          "distanceFromPrevious": 1400,
+          "info": {
+            "openingYear": 1980,
+            "dailyPassengers": 45000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        }
+      ]
+    },
+   
