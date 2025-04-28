@@ -288,39 +288,4 @@
       ]
     }
   },
-  "transferStations": [
-    {
-      "name": "Termini",
-      "lines": ["A", "B"],
-      "mapX": 450, 
-      "mapY": 400,
-      "info": {
-        "description": "Termini is the main railway station of Rome and a major interchange between Lines A and B.",
-        "connections": ["National Railways", "Airport Express", "Bus Terminal"],
-        "facilities": ["Shopping Center", "Food Court", "Tourist Information", "Left Luggage"]
-      }
-    },
-    {
-      "name": "San Giovanni",
-      "lines": ["A", "C"],
-      "mapX": 600, 
-      "mapY": 100,
-      "info": {
-        "description": "San Giovanni is a major interchange between Lines A and C, featuring archaeological exhibits from excavations during construction.",
-        "connections": ["Bus Lines", "Tram"],
-        "facilities": ["Archaeological Exhibits", "Shopping", "Cafes"]
-      }
-    },
-    {
-      "name": "Colosseo",
-      "lines": ["B", "D"],
-      "mapX": 650, 
-      "mapY": 300,
-      "info": {
-        "description": "Colosseo station serves the famous Colosseum and Roman Forum, connecting Lines B and D.",
-        "connections": ["Bus Lines", "Tourist Buses"],
-        "facilities": ["Tourist Information", "Guided Tour Booking", "Souvenir Shop"]
-      }
-    }
-  ]
 } 
