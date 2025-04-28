@@ -1,5 +1,5 @@
 {
-  "metroName": "Kyiv Metro",
+  "metroName": "Rome Metro",
   "metroInfo": {
     "description": "The Rome Metro (Italian: Metropolitana di Roma) is a rapid transit system that operates in Rome, Italy. It started operation in 1955, making it the oldest metro system in Italy.",
     "yearOpened": 1955,
@@ -11,11 +11,11 @@
     "ticketPrice": "€1.50 (valid for 100 minutes)"
   },
   "lines": {
-    "M1": {
+    "A": {
       "color": "#FF0000",
-      "name": "M1 - Red Line",
+      "name": "Line A - Red Line",
       "info": {
-        "yearOpened": 1961,
+        "yearOpened": 1980,
         "length": 18.5,
         "stations": 27,
         "averageSpeed": 32,
@@ -24,12 +24,12 @@
       },
       "stops": [
         {
-          "name": "Vokzalna", 
+          "name": "Battistini", 
           "mapX": 100, "mapY": 200,  
           "depth": 20,  
           "altitude": 50,
           "info": {
-            "openingYear": 1961,
+            "openingYear": 1990,
             "dailyPassengers": 35000,
             "platformType": "Island",
             "accessibility": "Fully accessible",
@@ -37,13 +37,13 @@
           }
         },
         {
-          "name": "Universytet", 
-          "mapX": 200, "mapY": 200, 
+          "name": "Cornelia", 
+          "mapX": 250, "mapY": 200, 
           "depth": 25, 
           "altitude": 55,
           "distanceFromPrevious": 1500,
           "info": {
-            "openingYear": 1961,
+            "openingYear": 1982,
             "dailyPassengers": 28000,
             "platformType": "Side",
             "accessibility": "Partially accessible",
@@ -51,13 +51,13 @@
           }
         },
         {
-          "name": "Khreshchatyk", 
+          "name": "Valle Aurelia", 
           "mapX": 400, "mapY": 200, 
           "depth": 30, 
           "altitude": 60,
           "distanceFromPrevious": 1200,
           "info": {
-            "openingYear": 1961,
+            "openingYear": 1982,
             "dailyPassengers": 22000,
             "platformType": "Island",
             "accessibility": "Fully accessible",
@@ -65,13 +65,13 @@
           }
         },
         {
-          "name": "Arsenalna", 
-          "mapX": 500, "mapY": 250, 
+          "name": "Termini", 
+          "mapX": 450, "mapY": 400, 
           "depth": 25, 
           "altitude": 55,
           "distanceFromPrevious": 1300,
           "info": {
-            "openingYear": 1961,
+            "openingYear": 1980,
             "dailyPassengers": 150000,
             "platformType": "Island",
             "accessibility": "Fully accessible",
@@ -79,13 +79,13 @@
           }
         },
         {
-          "name": "Dnipro", 
-          "mapX": 600, "mapY": 300,  
+          "name": "San Giovanni", 
+          "mapX": 600, "mapY": 100,  
           "depth": 26,  
           "altitude": 57,
           "distanceFromPrevious": 1400,
           "info": {
-            "openingYear": 1961,
+            "openingYear": 1980,
             "dailyPassengers": 45000,
             "platformType": "Island",
             "accessibility": "Fully accessible",
