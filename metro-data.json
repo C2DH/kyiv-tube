@@ -1,8 +1,8 @@
 {
-  "metroName": "Rome Metro",
+  "metroName": "Kyiv Metropolitan",
   "metroInfo": {
-    "description": "The Rome Metro (Italian: Metropolitana di Roma) is a rapid transit system that operates in Rome, Italy. It started operation in 1955, making it the oldest metro system in Italy.",
-    "yearOpened": 1955,
+    "description": "The Kyiv Metropolitan (Ukrainian: Kyivskyi Metropoliten) is a rapid transit system that operates in kyiv, Ukraine. It started operation in 1961, making it the oldest metro system in Ukraine.",
+    "yearOpened": 1961,
     "totalLength": 60,
     "totalStations": 73,
     "dailyRidership": 1500000,
