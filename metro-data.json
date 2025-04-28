@@ -11,7 +11,7 @@
     "ticketPrice": "€1.50 (valid for 100 minutes)"
   },
   "lines": {
-    "A": {
+    "M1": {
       "color": "#FF0000",
       "name": "Red Line",
       "info": {
@@ -37,7 +37,7 @@
           }
         },
         {
-          "name": "Cornelia", 
+          "name": "Universytet", 
           "mapX": 250, "mapY": 200, 
           "depth": 25, 
           "altitude": 55,
@@ -51,7 +51,7 @@
           }
         },
         {
-          "name": "Valle Aurelia", 
+          "name": "Khreshchatyk", 
           "mapX": 400, "mapY": 200, 
           "depth": 30, 
           "altitude": 60,
@@ -65,7 +65,7 @@
           }
         },
         {
-          "name": "Termini", 
+          "name": "Arsenalna", 
           "mapX": 450, "mapY": 400, 
           "depth": 25, 
           "altitude": 55,
@@ -79,7 +79,7 @@
           }
         },
         {
-          "name": "San Giovanni", 
+          "name": "Dnipro", 
           "mapX": 600, "mapY": 100,  
           "depth": 26,  
           "altitude": 57,
@@ -94,9 +94,9 @@
         }
       ]
     },
-    "B": {
+    "M2": {
       "color": "#0000FF",
-      "name": "Line B - Blue Line",
+      "name": "Blue Line",
       "info": {
         "yearOpened": 1955,
         "length": 23.6,
@@ -163,9 +163,9 @@
         }
       ]
     },
-    "C": {
+    "M3": {
       "color": "#00FF00",
-      "name": "Line C - Green Line",
+      "name": "Green Line",
       "info": {
         "yearOpened": 2014,
         "length": 15.8,
@@ -218,76 +218,7 @@
         }
       ]
     },
-    "D": {
-      "color": "#FF00FF",
-      "name": "Line D - Coastal Line",
-      "info": {
-        "yearOpened": 2005,
-        "length": 12.5,
-        "stations": 15,
-        "averageSpeed": 28,
-        "rollingStock": "MD-200 trains",
-        "history": "Line D connects the city center with the coastal areas, featuring several underwater sections."
-      },
-      "stops": [
-        {
-          "name": "Coastal Station", 
-          "mapX": 150, "mapY": 350,  
-          "depth": 15,
-          "altitude": 10,
-          "info": {
-            "openingYear": 2005,
-            "dailyPassengers": 22000,
-            "platformType": "Side",
-            "accessibility": "Fully accessible",
-            "facilities": ["Elevator", "Escalator", "Ticket machines", "Beach access"]
-          }
-        },
-        {
-          "name": "Lagoon Stop", 
-          "mapX": 250, "mapY": 300, 
-          "depth": 5, 
-          "altitude": -3,
-          "distanceFromPrevious": 1200,
-          "info": {
-            "openingYear": 2005,
-            "dailyPassengers": 12000,
-            "platformType": "Island",
-            "accessibility": "Partially accessible",
-            "facilities": ["Escalator", "Ticket machines", "Viewing windows"]
-          }
-        },
-        {
-          "name": "Underwater Station", 
-          "mapX": 350, "mapY": 350, 
-          "depth": 25, 
-          "altitude": -5,
-          "distanceFromPrevious": 1000,
-          "info": {
-            "openingYear": 2005,
-            "dailyPassengers": 18000,
-            "platformType": "Island",
-            "accessibility": "Fully accessible",
-            "facilities": ["Elevator", "Escalator", "Ticket machines", "Underwater viewing gallery"]
-          }
-        },
-        {
-          "name": "Colosseo", 
-          "mapX": 650, "mapY": 300, 
-          "depth": 32, 
-          "altitude": 60,
-          "distanceFromPrevious": 1300,
-          "info": {
-            "openingYear": 2005,
-            "dailyPassengers": 80000,
-            "platformType": "Island",
-            "accessibility": "Fully accessible",
-            "facilities": ["Elevator", "Escalator", "Ticket machines", "Tourist information"]
-          }
-        }
-      ]
-    }
-  },
+  
   "transferStations": [
     {
       "name": "Termini",
