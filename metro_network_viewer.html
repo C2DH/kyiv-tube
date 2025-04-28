@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metro Network Viewer</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+        #metro-container {
+            width: 100vw;
+            height: 100vh;
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        #metro-map, #detailed-view {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .line-path {
+            cursor: pointer;
+            transition: stroke-width 0.3s ease;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .line-path:hover {
+            stroke-width: 8 !important;
+            filter: drop-shadow(0 0 3px rgba(0,0,0,0.3));
+        }
+        .stop-marker {
+            cursor: pointer;
+            transition: r 0.2s ease, filter 0.2s ease;
+        }
+        .stop-marker:hover {
+            r: 10;
+            filter: drop-shadow(0 0 4px rgba(0,0,0,0.4));
+        }
+        #detailed-view {
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.4s ease;
+            overflow-x: auto;
+            background-color: white;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+        }
+        #zoom-container {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            overflow-x: auto;
+            /*padding-top: 150px;*/
+            top: 150px;
+            overflow: unset !important;
+        }
+        #detailed-line {
+            width: 100%;
+            height: 100%;
+            overflow: unset;
+        }
+        #scrollable-content {
+            height: calc(100% - 50px);
+            min-width: max-content;
+        }
+        /* Add styling for below-sea-level areas */
+        .below-sea-level {
+            fill: rgba(0, 119, 190, 0.2);
+        }
+        /* Header with line info */
+        #line-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 30;
+        }
+        #line-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+        /* Back button */
+        #back-button {
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+        #back-button:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        /* Map title */
+        #map-title {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            z-index: 5;
+        }
+        /* Legend */
+        #legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255,255,255,0.9);
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 5;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .legend-color {
+            width: 20px;
+            height: 5px;
+            margin-right: 10px;
+        }
+        /* Station labels */
+        .station-label {
+            font-weight: bold;
+        }
+        .info-label {
+            font-size: 10px;
+            fill: #555;
+        }
+        .below-sea-label {
+            font-size: 10px;
+            fill: #0077be;
+            font-weight: bold;
+        }
+        /* Loading indicator */
+        #loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            font-size: 20px;
+            color: #333;
+        }
+        /* Add these styles to the existing <style> section */
+        .transfer-station-group {
+            cursor: pointer;
+            transition: filter 0.2s ease;
+        }
+        .transfer-station-group:hover {
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+        }
+        #transfer-popup {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #zoom-controls button {
+            transition: background-color 0.2s ease;
+        }
+        #zoom-controls button:hover {
+            background-color: #f0f0f0;
+        }
+        #metro-map {
+            cursor: grab;
+        }
+        #metro-map:active {
+            cursor: grabbing;
+        }
+        /* Add a new style for the transfer station background circle */
+        .transfer-station-background {
+            transition: r 0.2s ease, stroke-width 0.2s ease;
+        }
+        .transfer-station-group:hover .transfer-station-background {
+            r: 13;
+            stroke-width: 2;
+        }
+        
+        /* Add style for transfer station slices */
+        .transfer-station-slice {
+            transition: opacity 0.2s ease;
+        }
+        .transfer-station-group:hover .transfer-station-slice {
+            opacity: 0.9;
+            filter: brightness(1.1);
+        }
+        
+        /* Info button and popup styles */
+        #info-button, #filters-button {
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        #filters-button {
+            margin: 0;
+            margin-left: 30px;
+        }
+        #info-button:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+        #info-button svg {
+            margin-right: 5px;
+        }
+        #line-info-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            max-width: 500px;
+            width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+        }
+        #line-info-popup h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        #line-info-popup p {
+            line-height: 1.6;
+            color: #555;
+        }
+        #line-info-popup .info-section {
+            margin-bottom: 15px;
+        }
+        #line-info-popup .info-section h3 {
+            margin-bottom: 5px;
+            color: #444;
+        }
+        #line-info-popup .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+        #line-info-popup .close-button:hover {
+            color: #333;
+        }
+        #popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 99;
+            display: none;
+        }
+        
+        /* Station info popup styles */
+        #station-info-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 100;
+            max-width: 400px;
+            width: 80%;
+            max-height: 80vh;
+            overflow-y: auto;
+            display: none;
+        }
+        #station-info-popup h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        #station-info-popup .station-info-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        #station-info-popup .station-color-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        #station-info-popup .info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        #station-info-popup .info-label {
+            font-weight: bold;
+            width: 120px;
+            color: #555;
+        }
+        #station-info-popup .info-value {
+            flex: 1;
+            color: #333;
+        }
+        #station-info-popup .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+        #station-info-popup .close-button:hover {
+            color: #333;
+        }
+        
+        /* Make station markers in detailed view clickable */
+        .station-detail {
+            cursor: pointer;
+        }
+        .station-detail .stop-marker:hover {
+            r: 10;
+            filter: drop-shadow(0 0 6px rgba(0,0,0,0.5));
+        }
+    </style>
+</head>
+<body>
+    <div id="metro-container">
+        <!-- Main map view -->
+        <div id="map-title">Metro Network Visualizer</div>
+        <svg id="metro-map" width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+            <!-- Background will be dynamically populated -->
+        </svg>
+        
+        <!-- Legend for the main map -->
+        <div id="legend"></div>
+
+        <!-- Detailed line view -->
+        <div id="detailed-view">
+            <div id="line-header">
+                <button id="back-button">← Back to Map</button>
+                <div id="line-name"></div>
+                
+                <!-- Filters -->
+                <button id="filters-button">⚙️ Filters</button>
+
+                <button id="info-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    Line Info
+                </button>
+            </div>
+            <div id="zoom-container">
+                <svg id="detailed-line" preserveAspectRatio="xMinYMid meet">
+                    <g id="scrollable-content">
+                        <!-- Detailed line will be dynamically populated -->
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+
+        <!-- Filter popup -->
+        <div id="filter-popup" style="
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 200;
+            display: none;
+        ">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong style="font-size:16px;">Filters</strong>
+                <button id="close-filters" style="border:none;background:none;font-size:16px;cursor:pointer;">✕</button>
+            </div>
+            <div style="margin-top:10px;">
+                <label style="display:block;margin-bottom:5px;">
+                    Opening Year:<br/>
+                    <input type="number" id="filter-year-start" placeholder="From year" style="width:80px;margin-right:5px;" />
+                    <input type="number" id="filter-year-end" placeholder="To year" style="width:80px;" />
+                </label>
+                <label style="display:block;margin-bottom:10px;">
+                    Facilities:<br/>
+                    <select id="filter-facilities" style="width:100%;margin-top:5px;">
+                        <option value="">Any</option>
+                        <option value="Elevator">Elevator</option>
+                        <option value="Escalator">Escalator</option>
+                        <option value="Restrooms">Restrooms</option>
+                        <option value="Ticket machines">Ticket Machines</option>
+                    </select>
+                </label>
+                <button id="apply-filter" style="padding:6px 12px;">Apply Filter</button>
+                <button id="clear-filter" style="padding:6px 12px;margin-left:5px;">Clear Filter</button>
+            </div>
+        </div>
+        
+        <!-- Line info popup -->
+        <div id="popup-overlay"></div>
+        <div id="line-info-popup">
+            <button class="close-button">&times;</button>
+            <h2 id="popup-line-name"></h2>
+            <div id="popup-content">
+                <!-- Content will be dynamically populated -->
+            </div>
+        </div>
+        
+        <!-- Station info popup -->
+        <div id="station-info-popup">
+            <button class="close-button">&times;</button>
+            <div class="station-info-header">
+                <div class="station-color-indicator" id="station-color"></div>
+                <h2 id="popup-station-name"></h2>
+            </div>
+            <div id="station-info-content">
+                <!-- Content will be dynamically populated -->
+            </div>
+        </div>
+        
+        <!-- Loading indicator -->
+        <div id="loading">Loading metro data...</div>
+    </div>
+
+    <script>
+        class MetroVisualizer {
+            constructor(mapSvg, detailedSvg) {
+                this.mapSvg = mapSvg;
+                this.detailedSvg = detailedSvg;
+                this.currentLine = null;
+                this.isTransitioning = false;
+                this.metroData = null;
+                
+                // Add properties for zoom/pan functionality
+                this.zoomLevel = 1;
+                this.panX = 0;
+                this.panY = 0;
+                this.isPanning = false;
+                this.startPanX = 0;
+                this.startPanY = 0;
+            }
+
+            async loadMetroData(jsonPath) {
+                try {
+                    const response = await fetch(jsonPath);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    this.metroData = await response.json();
+                    
+                    // Update page title with metro name
+                    document.getElementById('map-title').textContent = this.metroData.metroName;
+                    
+                    // Initialize visualization after data is loaded
+                    this.createSchematicMap();
+                    this.createLegend();
+                    this.addZoomControls();
+                    this.setupPanFunctionality();
+                    this.setupStationHoverEffects();
+                    
+                    // Hide loading indicator
+                    document.getElementById('loading').style.display = 'none';
+                } catch (error) {
+                    console.error('Error loading metro data:', error);
+                    document.getElementById('loading').textContent = 'Error loading metro data. Please try again.';
+                }
+            }
+
+            applyFilters(lineName) {
+    const startYear = parseInt(document.getElementById('filter-year-start').value);
+    const endYear = parseInt(document.getElementById('filter-year-end').value);
+    const facility = document.getElementById('filter-facilities').value;
+
+    const stops = this.metroData.lines[lineName].stops;
+
+    stops.forEach(stop => {
+        const stationElem = document.querySelector(`.station-detail[data-station="${stop.name}"]`);
+        let highlight = true;
+
+        // Filter by opening year
+        if (!isNaN(startYear) && stop.info.openingYear < startYear) {
+            highlight = false;
+        }
+        if (!isNaN(endYear) && stop.info.openingYear > endYear) {
+            highlight = false;
+        }
+
+        // Filter by facilities
+        if (facility && (!stop.info.facilities || !stop.info.facilities.includes(facility))) {
+            highlight = false;
+        }
+
+        // Apply highlight styling
+        if (highlight) {
+            stationElem.style.opacity = '1';
+            stationElem.querySelector('.stop-marker').setAttribute('r', '10'); // Enlarge marker
+            stationElem.querySelector('.stop-marker').style.stroke = '#FFD700'; // Highlight with gold outline
+            stationElem.querySelector('.stop-marker').style.strokeWidth = '3';
+        } else {
+            stationElem.style.opacity = '0.3';
+            stationElem.querySelector('.stop-marker').setAttribute('r', '6'); // Reduce marker size
+            stationElem.querySelector('.stop-marker').style.stroke = 'none';
+        }
+    });
+}
+
+            // Method to clear filters and restore default visualization
+            clearFilters(lineName) {
+    const stops = this.metroData.lines[lineName].stops;
+    stops.forEach(stop => {
+        const stationElem = document.querySelector(`.station-detail[data-station="${stop.name}"]`);
+        stationElem.style.opacity = '1';
+        stationElem.querySelector('.stop-marker').setAttribute('r', '8');
+        stationElem.querySelector('.stop-marker').style.stroke = 'none';
+    });
+
+    // Clear inputs
+    document.getElementById('filter-year-start').value = '';
+    document.getElementById('filter-year-end').value = '';
+    document.getElementById('filter-facilities').value = '';
+}
+
+            createLegend() {
+                const legend = document.getElementById('legend');
+                legend.innerHTML = '<h3 style="margin-top: 0;">Metro Lines</h3>';
+                
+                Object.entries(this.metroData.lines).forEach(([lineName, line]) => {
+                    const item = document.createElement('div');
+                    item.className = 'legend-item';
+                    
+                    const colorBox = document.createElement('div');
+                    colorBox.className = 'legend-color';
+                    colorBox.style.backgroundColor = line.color;
+                    
+                    const label = document.createElement('div');
+                    label.textContent = line.name;
+                    
+                    item.appendChild(colorBox);
+                    item.appendChild(label);
+                    legend.appendChild(item);
+                    
+                    // Make legend items clickable
+                    item.style.cursor = 'pointer';
+                    item.addEventListener('click', () => {
+                        if (!this.isTransitioning) {
+                            this.zoomIntoLine(lineName);
+                        }
+                    });
+                });
+            }
+
+            createSchematicMap() {
+                this.mapSvg.innerHTML = ''; // Clear existing content
+                
+                // Create a group for all map elements to enable zooming and panning
+                const mapGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                mapGroup.setAttribute("id", "map-zoom-group");
+                this.mapSvg.appendChild(mapGroup);
+                this.updateMapTransform(); // Initialize transform
+                
+                // For each line
+                Object.keys(this.metroData.lines).forEach(lineName => {
+                    const line = this.metroData.lines[lineName];
+                    const lineGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                    lineGroup.setAttribute("id", `line-group-${lineName}`);
+                    
+                    // Create line path
+                    const linePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                    const pathData = line.stops.map((stop, i) => 
+                        `${i === 0 ? 'M' : 'L'}${stop.mapX},${stop.mapY}`
+                    ).join(' ');
+                    
+                    linePath.setAttribute("d", pathData);
+                    linePath.setAttribute("stroke", line.color);
+                    linePath.setAttribute("stroke-width", "6");
+                    linePath.setAttribute("fill", "none");
+                    linePath.setAttribute("id", `line-${lineName}`);
+                    linePath.classList.add('line-path');
+                    
+                    lineGroup.appendChild(linePath);
+
+                    // Add stations (but not transfer stations yet)
+                    line.stops.forEach(stop => {
+                        // Skip if this is a transfer station (we'll add them separately)
+                        if (this.metroData.transferStations.some(ts => ts.name === stop.name && ts.lines.includes(lineName))) {
+                            return;
+                        }
+                        
+                        const stationGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                        stationGroup.setAttribute("class", "station-group");
+                        stationGroup.setAttribute("data-line", lineName);
+                        stationGroup.setAttribute("data-station", stop.name);
+                        
+                        const station = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        station.setAttribute("cx", stop.mapX);
+                        station.setAttribute("cy", stop.mapY);
+                        station.setAttribute("r", "8");
+                        station.setAttribute("fill", line.color);
+                        station.classList.add('stop-marker');
+                        
+                        const stationLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        stationLabel.setAttribute("x", stop.mapX);
+                        stationLabel.setAttribute("y", stop.mapY - 15);
+                        stationLabel.setAttribute("text-anchor", "middle");
+                        stationLabel.setAttribute("font-size", "12");
+                        stationLabel.textContent = stop.name;
+                        
+                        stationGroup.appendChild(station);
+                        stationGroup.appendChild(stationLabel);
+                        lineGroup.appendChild(stationGroup);
+                        
+                        // Make stations clickable too
+                        stationGroup.style.cursor = 'pointer';
+                        stationGroup.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (!this.isTransitioning) {
+                                this.zoomIntoLine(lineName);
+                            }
+                        });
+                    });
+                    
+                    mapGroup.appendChild(lineGroup);
+                    
+                    // Add click event to the line
+                    linePath.addEventListener('click', () => {
+                        if (!this.isTransitioning) {
+                            this.zoomIntoLine(lineName);
+                        }
+                    });
+                });
+                
+                // Add transfer stations
+                this.addTransferStations(mapGroup);
+            }
+            
+            // Now let's fix the addTransferStations method to improve hover behavior
+            addTransferStations(mapGroup) {
+                const transferGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                transferGroup.setAttribute("id", "transfer-stations-group");
+                
+                this.metroData.transferStations.forEach(station => {
+                    const stationGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                    stationGroup.setAttribute("class", "transfer-station-group");
+                    stationGroup.setAttribute("data-station", station.name);
+                    
+                    // Create a larger white circle as background
+                    const background = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    background.setAttribute("cx", station.mapX);
+                    background.setAttribute("cy", station.mapY);
+                    background.setAttribute("r", "12");
+                    background.setAttribute("fill", "white");
+                    background.setAttribute("stroke", "#333");
+                    background.setAttribute("stroke-width", "1");
+                    background.classList.add('transfer-station-background');
+                    stationGroup.appendChild(background);
+                    
+                    // Create a pie chart style circle divided by the number of lines
+                    const lineCount = station.lines.length;
+                    let startAngle = 0;
+                    const angleIncrement = 360 / lineCount;
+                    
+                    station.lines.forEach(lineName => {
+                        const line = this.metroData.lines[lineName];
+                        const endAngle = startAngle + angleIncrement;
+                        
+                        const slice = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                        // Calculate the path for the slice
+                        const startRadians = (startAngle - 90) * Math.PI / 180;
+                        const endRadians = (endAngle - 90) * Math.PI / 180;
+                        
+                        const x1 = station.mapX + 10 * Math.cos(startRadians);
+                        const y1 = station.mapY + 10 * Math.sin(startRadians);
+                        const x2 = station.mapX + 10 * Math.cos(endRadians);
+                        const y2 = station.mapY + 10 * Math.sin(endRadians);
+                        
+                        const largeArcFlag = angleIncrement > 180 ? 1 : 0;
+                        
+                        const pathData = `M ${station.mapX} ${station.mapY} L ${x1} ${y1} A 10 10 0 ${largeArcFlag} 1 ${x2} ${y2} Z`;
+                        
+                        slice.setAttribute("d", pathData);
+                        slice.setAttribute("fill", line.color);
+                        slice.classList.add('transfer-station-slice');
+                        stationGroup.appendChild(slice);
+                        
+                        startAngle = endAngle;
+                    });
+                    
+                    // Add station label
+                    const stationLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    stationLabel.setAttribute("x", station.mapX);
+                    stationLabel.setAttribute("y", station.mapY - 20);
+                    stationLabel.setAttribute("text-anchor", "middle");
+                    stationLabel.setAttribute("font-size", "12");
+                    stationLabel.setAttribute("font-weight", "bold");
+                    stationLabel.textContent = station.name;
+                    stationGroup.appendChild(stationLabel);
+                    
+                    // Add transfer icon/text
+                    const transferLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    transferLabel.setAttribute("x", station.mapX);
+                    transferLabel.setAttribute("y", station.mapY - 35);
+                    transferLabel.setAttribute("text-anchor", "middle");
+                    transferLabel.setAttribute("font-size", "10");
+                    transferLabel.setAttribute("fill", "#555");
+                    transferLabel.textContent = "Transfer Station";
+                    stationGroup.appendChild(transferLabel);
+                    
+                    // Make transfer station clickable
+                    stationGroup.style.cursor = 'pointer';
+                    stationGroup.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!this.isTransitioning) {
+                            // Show a popup with available lines
+                            this.showTransferOptions(station);
+                        }
+                    });
+                    
+                    transferGroup.appendChild(stationGroup);
+                });
+                
+                mapGroup.appendChild(transferGroup);
+            }
+            
+            // New method to show transfer options
+            showTransferOptions(station) {
+                // Remove any existing popup
+                const existingPopup = document.getElementById('transfer-popup');
+                if (existingPopup) {
+                    existingPopup.remove();
+                }
+                
+                // Create popup
+                const popup = document.createElement('div');
+                popup.id = 'transfer-popup';
+                popup.style.position = 'absolute';
+                popup.style.left = '50%';
+                popup.style.top = '50%';
+                popup.style.transform = 'translate(-50%, -50%)';
+                popup.style.backgroundColor = 'white';
+                popup.style.padding = '15px';
+                popup.style.borderRadius = '8px';
+                popup.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+                popup.style.zIndex = '100';
+                
+                // Add title
+                const title = document.createElement('h3');
+                title.textContent = `${station.name} - Transfer Station`;
+                title.style.margin = '0 0 10px 0';
+                popup.appendChild(title);
+                
+                // Add line options
+                station.lines.forEach(lineName => {
+                    const line = this.metroData.lines[lineName];
+                    const option = document.createElement('div');
+                    option.style.padding = '8px';
+                    option.style.margin = '5px 0';
+                    option.style.backgroundColor = line.color;
+                    option.style.color = this.isLightColor(line.color) ? 'black' : 'white';
+                    option.style.borderRadius = '4px';
+                    option.style.cursor = 'pointer';
+                    option.textContent = line.name;
+                    
+                    option.addEventListener('click', () => {
+                        popup.remove();
+                        this.zoomIntoLine(lineName);
+                    });
+                    
+                    popup.appendChild(option);
+                });
+                
+                // Add close button
+                const closeBtn = document.createElement('button');
+                closeBtn.textContent = 'Close';
+                closeBtn.style.display = 'block';
+                closeBtn.style.width = '100%';
+                closeBtn.style.padding = '8px';
+                closeBtn.style.marginTop = '10px';
+                closeBtn.style.border = 'none';
+                closeBtn.style.backgroundColor = '#eee';
+                closeBtn.style.borderRadius = '4px';
+                closeBtn.style.cursor = 'pointer';
+                
+                closeBtn.addEventListener('click', () => {
+                    popup.remove();
+                });
+                
+                popup.appendChild(closeBtn);
+                
+                // Add to document
+                document.body.appendChild(popup);
+            }
+            
+            // New method to update map transform for zoom/pan
+            updateMapTransform() {
+                const mapGroup = document.getElementById('map-zoom-group');
+                if (mapGroup) {
+                    mapGroup.setAttribute('transform', `translate(${this.panX}, ${this.panY}) scale(${this.zoomLevel})`);
+                }
+            }
+            
+            // New method to add zoom controls
+            addZoomControls() {
+                // Create zoom controls container
+                const zoomControls = document.createElement('div');
+                zoomControls.id = 'zoom-controls';
+                zoomControls.style.position = 'absolute';
+                zoomControls.style.bottom = '20px';
+                zoomControls.style.left = '20px';
+                zoomControls.style.display = 'flex';
+                zoomControls.style.flexDirection = 'column';
+                zoomControls.style.gap = '5px';
+                zoomControls.style.zIndex = '5';
+                
+                // Zoom in button
+                const zoomInBtn = document.createElement('button');
+                zoomInBtn.textContent = '+';
+                zoomInBtn.style.width = '40px';
+                zoomInBtn.style.height = '40px';
+                zoomInBtn.style.fontSize = '20px';
+                zoomInBtn.style.border = 'none';
+                zoomInBtn.style.borderRadius = '5px';
+                zoomInBtn.style.backgroundColor = 'white';
+                zoomInBtn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                zoomInBtn.style.cursor = 'pointer';
+                
+                zoomInBtn.addEventListener('click', () => {
+                    this.zoomLevel = Math.min(this.zoomLevel + 0.2, 3); // Max zoom 3x
+                    this.updateMapTransform();
+                });
+                
+                // Zoom out button
+                const zoomOutBtn = document.createElement('button');
+                zoomOutBtn.textContent = '−';
+                zoomOutBtn.style.width = '40px';
+                zoomOutBtn.style.height = '40px';
+                zoomOutBtn.style.fontSize = '20px';
+                zoomOutBtn.style.border = 'none';
+                zoomOutBtn.style.borderRadius = '5px';
+                zoomOutBtn.style.backgroundColor = 'white';
+                zoomOutBtn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                zoomOutBtn.style.cursor = 'pointer';
+                
+                zoomOutBtn.addEventListener('click', () => {
+                    this.zoomLevel = Math.max(this.zoomLevel - 0.2, 0.5); // Min zoom 0.5x
+                    this.updateMapTransform();
+                });
+                
+                // Reset zoom/pan button
+                const resetBtn = document.createElement('button');
+                resetBtn.textContent = '↺';
+                resetBtn.style.width = '40px';
+                resetBtn.style.height = '40px';
+                resetBtn.style.fontSize = '20px';
+                resetBtn.style.border = 'none';
+                resetBtn.style.borderRadius = '5px';
+                resetBtn.style.backgroundColor = 'white';
+                resetBtn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                resetBtn.style.cursor = 'pointer';
+                
+                resetBtn.addEventListener('click', () => {
+                    this.zoomLevel = 1;
+                    this.panX = 0;
+                    this.panY = 0;
+                    this.updateMapTransform();
+                });
+                
+                zoomControls.appendChild(zoomInBtn);
+                zoomControls.appendChild(zoomOutBtn);
+                zoomControls.appendChild(resetBtn);
+                
+                document.getElementById('metro-container').appendChild(zoomControls);
+            }
+            
+            // New method to setup pan functionality
+            setupPanFunctionality() {
+                const mapSvg = this.mapSvg;
+                
+                // Mouse events for panning
+                mapSvg.addEventListener('mousedown', (e) => {
+                    if (this.currentLine) return; // Don't pan if in detailed view
+                    
+                    this.isPanning = true;
+                    this.startPanX = e.clientX - this.panX;
+                    this.startPanY = e.clientY - this.panY;
+                    mapSvg.style.cursor = 'grabbing';
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (!this.isPanning) return;
+                    
+                    this.panX = e.clientX - this.startPanX;
+                    this.panY = e.clientY - this.startPanY;
+                    this.updateMapTransform();
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    this.isPanning = false;
+                    mapSvg.style.cursor = 'default';
+                });
+                
+                // Touch events for panning
+                mapSvg.addEventListener('touchstart', (e) => {
+                    if (this.currentLine) return; // Don't pan if in detailed view
+                    
+                    this.isPanning = true;
+                    this.startPanX = e.touches[0].clientX - this.panX;
+                    this.startPanY = e.touches[0].clientY - this.panY;
+                });
+                
+                document.addEventListener('touchmove', (e) => {
+                    if (!this.isPanning) return;
+                    
+                    this.panX = e.touches[0].clientX - this.startPanX;
+                    this.panY = e.touches[0].clientY - this.startPanY;
+                    this.updateMapTransform();
+                });
+                
+                document.addEventListener('touchend', () => {
+                    this.isPanning = false;
+                });
+                
+                // Wheel event for zooming
+                mapSvg.addEventListener('wheel', (e) => {
+                    if (this.currentLine) return; // Don't zoom if in detailed view
+                    
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                    this.zoomLevel = Math.max(0.5, Math.min(3, this.zoomLevel + delta));
+                    
+                    // Adjust pan to zoom toward cursor position
+                    const rect = mapSvg.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+                    
+                    this.panX = mouseX - (mouseX - this.panX) * (1 + delta);
+                    this.panY = mouseY - (mouseY - this.panY) * (1 + delta);
+                    
+                    this.updateMapTransform();
+                }, { passive: false });
+            }
+
+            zoomIntoLine(lineName) {
+                if (this.isTransitioning) return;
+                this.isTransitioning = true;
+                
+                const line = this.metroData.lines[lineName];
+                this.currentLine = lineName;
+                
+                // Update header
+                document.getElementById('line-name').textContent = line.name;
+                document.getElementById('line-header').style.backgroundColor = line.color;
+                
+                // Adjust text color based on background for better contrast
+                const isLightColor = this.isLightColor(line.color);
+                document.getElementById('line-name').style.color = isLightColor ? '#000' : '#fff';
+                document.getElementById('back-button').style.color = isLightColor ? '#000' : '#fff';
+                document.getElementById('back-button').style.backgroundColor = isLightColor ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.2)';
+                
+                // Also style the info button
+                document.getElementById('info-button').style.color = isLightColor ? '#000' : '#fff';
+                document.getElementById('info-button').style.backgroundColor = isLightColor ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.2)';
+                
+                const scrollableContent = document.getElementById('scrollable-content');
+                scrollableContent.innerHTML = ''; // Clear previous content
+
+                // Reset scroll position
+                document.getElementById('zoom-container').scrollLeft = 0;
+
+                // Calculate scaling factors
+                const HORIZONTAL_SCALE = 0.5;  // 1 pixel = 0.5 meters
+                const VERTICAL_SCALE = 10;  // 1 pixel = 10 meters (increased for better vertical visualization)
+
+                let currentX = 100;  // Starting point
+                let previousStop = null;
+
+                // Create altitude line (black and above the metro line)
+                const altitudePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                
+                // Create metro line
+                const mainLinePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                
+                let altitudePathData = [];
+                let mainLinePathData = [];
+
+                // Calculate the sea level position (fixed reference point)
+                const SEA_LEVEL_Y = 300; // This is where sea level (altitude=0) will be
+
+                // Find min and max altitudes and depths for better scaling
+                let minAltitude = Infinity;
+                let maxAltitude = -Infinity;
+                let maxDepth = 0;
+                
+                line.stops.forEach(stop => {
+                    minAltitude = Math.min(minAltitude, stop.altitude);
+                    maxAltitude = Math.max(maxAltitude, stop.altitude);
+                    maxDepth = Math.max(maxDepth, stop.depth);
+                });
+                
+                // Add some padding to the min/max values
+                const minAltitudePadded = Math.min(0, minAltitude - 5);
+                const maxAltitudePadded = maxAltitude + 5;
+                const maxDepthPadded = maxDepth + 5;
+                
+                // Create vertical scale/ruler
+                const rulerGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                rulerGroup.setAttribute("class", "vertical-ruler");
+                
+                // Draw vertical ruler line
+                const rulerLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                rulerLine.setAttribute("x1", "50");
+                rulerLine.setAttribute("y1", SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE);
+                rulerLine.setAttribute("x2", "50");
+                rulerLine.setAttribute("y2", SEA_LEVEL_Y + maxDepthPadded * VERTICAL_SCALE);
+                rulerLine.setAttribute("stroke", "#333");
+                rulerLine.setAttribute("stroke-width", "2");
+                rulerGroup.appendChild(rulerLine);
+                
+                // Add ruler markings and labels
+                const interval = 10; // 10 meter intervals
+                const maxHeight = Math.ceil(maxAltitudePadded / interval) * interval;
+                const maxDepthMark = Math.ceil(maxDepthPadded / interval) * interval;
+                
+                // Loop from maximum depth to maximum height
+                for (let i = -maxDepthMark; i <= maxHeight; i += interval) {
+                    const y = SEA_LEVEL_Y + i * VERTICAL_SCALE;
+                    
+                    // Skip if out of visible range
+                    if (y < SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE - 20 || 
+                        y > SEA_LEVEL_Y + maxDepthPadded * VERTICAL_SCALE + 20) {
+                        continue;
+                    }
+                    
+                    // Add tick mark
+                    const tick = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    tick.setAttribute("x1", "45");
+                    tick.setAttribute("y1", y);
+                    tick.setAttribute("x2", "55");
+                    tick.setAttribute("y2", y);
+                    tick.setAttribute("stroke", "#333");
+                    tick.setAttribute("stroke-width", "1");
+                    rulerGroup.appendChild(tick);
+                    
+                    // Add label
+                    const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    label.setAttribute("x", "40");
+                    label.setAttribute("y", y + 4);
+                    label.setAttribute("text-anchor", "end");
+                    label.setAttribute("font-size", "10");
+                    label.setAttribute("fill", i === 0 ? "#0077be" : "#555");
+                    label.setAttribute("font-weight", i === 0 ? "bold" : "normal");
+                    label.textContent = `${i}m`;  // Show actual values (positive for height, negative for depth)
+                    rulerGroup.appendChild(label);
+                    
+                    // Add horizontal grid line
+                    const gridLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    gridLine.setAttribute("x1", "60");
+                    gridLine.setAttribute("y1", y);
+                    gridLine.setAttribute("x2", "5000");
+                    gridLine.setAttribute("y2", y);
+                    gridLine.setAttribute("stroke", i === 0 ? "#0077be" : "#ddd");
+                    gridLine.setAttribute("stroke-width", i === 0 ? "1" : "0.5");
+                    gridLine.setAttribute("stroke-dasharray", i === 0 ? "none" : "5,5");
+                    rulerGroup.appendChild(gridLine);
+                }
+                
+                scrollableContent.appendChild(rulerGroup);
+
+                // Create below sea level area
+                const belowSeaPath = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                belowSeaPath.setAttribute("x", "0");
+                belowSeaPath.setAttribute("y", SEA_LEVEL_Y);
+                belowSeaPath.setAttribute("width", "5000"); // Make wider to ensure coverage
+                belowSeaPath.setAttribute("height", maxDepthPadded * VERTICAL_SCALE + 50);
+                belowSeaPath.setAttribute("fill", "rgba(0, 119, 190, 0.2)");
+                belowSeaPath.setAttribute("pointer-events", "none"); // Make it non-interactive
+                scrollableContent.appendChild(belowSeaPath);
+                
+                // Add visual indicators for scrolling if needed
+                const scrollIndicator = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                scrollIndicator.setAttribute("x", "50%");
+                scrollIndicator.setAttribute("y", "30");
+                scrollIndicator.setAttribute("text-anchor", "middle");
+                scrollIndicator.setAttribute("font-size", "12");
+                scrollIndicator.setAttribute("fill", "#888");
+                scrollIndicator.setAttribute("id", "scroll-indicator");
+                scrollIndicator.textContent = "Scroll horizontally to see more →";
+                scrollIndicator.style.opacity = "0";
+                scrollableContent.appendChild(scrollIndicator);
+                
+                // Calculate all station positions first
+                line.stops.forEach((stop, index) => {
+                    // Calculate horizontal positioning based on distance
+                    if (previousStop && stop.distanceFromPrevious) {
+                        currentX += stop.distanceFromPrevious * HORIZONTAL_SCALE;
+                    }
+
+                    // Altitude representation (ground level relative to sea level)
+                    const altitudeY = SEA_LEVEL_Y - stop.altitude * VERTICAL_SCALE;
+                    altitudePathData.push(`${currentX},${altitudeY}`);
+
+                    // Metro line (positioned at the correct depth below ground level)
+                    const depthY = altitudeY + stop.depth * VERTICAL_SCALE;
+                    mainLinePathData.push(`${currentX},${depthY}`);
+                    
+                    // Store the position for later use
+                    stop.calculatedX = currentX;
+                    stop.calculatedAltitudeY = altitudeY;
+                    stop.calculatedDepthY = depthY;
+                    
+                    previousStop = stop;
+                });
+                
+                // Draw sea level reference line
+                const seaLevelLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                seaLevelLine.setAttribute("x1", "0");
+                seaLevelLine.setAttribute("y1", SEA_LEVEL_Y);
+                seaLevelLine.setAttribute("x2", currentX + 100);
+                seaLevelLine.setAttribute("y2", SEA_LEVEL_Y);
+                seaLevelLine.setAttribute("stroke", "#0077be");  // Ocean blue color
+                seaLevelLine.setAttribute("stroke-width", "2");
+                seaLevelLine.setAttribute("pointer-events", "none"); // Make it non-interactive
+                scrollableContent.appendChild(seaLevelLine);
+
+                // Create soil fill between altitude line and sea level
+                const soilPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                const soilPathData = [...altitudePathData];
+                soilPathData.push(`${currentX + 100},${SEA_LEVEL_Y}`);
+                soilPathData.push(`0,${SEA_LEVEL_Y}`);
+                soilPath.setAttribute("d", `M${soilPathData.join('L')}Z`);
+                soilPath.setAttribute("fill", "url(#soilGradient)");  // Use gradient for soil
+                soilPath.setAttribute("opacity", "0.8");
+                soilPath.setAttribute("pointer-events", "none"); // Make soil non-interactive
+                scrollableContent.appendChild(soilPath);
+                
+                // Create soil gradient
+                const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+                const soilGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+                soilGradient.setAttribute("id", "soilGradient");
+                soilGradient.setAttribute("gradientUnits", "userSpaceOnUse");
+                soilGradient.setAttribute("x1", "0");
+                soilGradient.setAttribute("y1", SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE);
+                soilGradient.setAttribute("x2", "0");
+                soilGradient.setAttribute("y2", SEA_LEVEL_Y + maxDepthPadded * VERTICAL_SCALE);
+                
+                // Two distinct soil colors with transition at sea level
+                const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop1.setAttribute("offset", "0");
+                stop1.setAttribute("stop-color", "#8B6B4A"); // Darker brown for topsoil
+                
+                const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop2.setAttribute("offset", (SEA_LEVEL_Y - (SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE)) / ((SEA_LEVEL_Y + maxDepthPadded * VERTICAL_SCALE) - (SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE)));
+                stop2.setAttribute("stop-color", "#8B6B4A"); // Darker brown for topsoil
+                
+                const stop3 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop3.setAttribute("offset", (SEA_LEVEL_Y - (SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE)) / ((SEA_LEVEL_Y + maxDepthPadded * VERTICAL_SCALE) - (SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE)));
+                stop3.setAttribute("stop-color", "#BFB3A8"); // Much lighter brown for subsoil
+                
+                const stop4 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop4.setAttribute("offset", "1");
+                stop4.setAttribute("stop-color", "#BFB3A8"); // Much lighter brown for subsoil
+                
+                soilGradient.appendChild(stop1);
+                soilGradient.appendChild(stop2);
+                soilGradient.appendChild(stop3);
+                soilGradient.appendChild(stop4);
+                defs.appendChild(soilGradient);
+                scrollableContent.appendChild(defs);
+                
+                // Create path elements
+                // Altitude line (black and thin, representing ground level)
+                altitudePath.setAttribute("d", `M${altitudePathData.join('L')}`);
+                altitudePath.setAttribute("stroke", "black");
+                altitudePath.setAttribute("stroke-width", "2");
+                altitudePath.setAttribute("fill", "none");
+                altitudePath.setAttribute("pointer-events", "none"); // Make altitude line non-interactive
+                scrollableContent.appendChild(altitudePath);
+
+                // Main metro line - draw this AFTER the soil to ensure it's on top
+                mainLinePath.setAttribute("d", `M${mainLinePathData.join('L')}`);
+                mainLinePath.setAttribute("stroke", line.color);
+                mainLinePath.setAttribute("stroke-width", "4");
+                mainLinePath.setAttribute("fill", "none");
+                scrollableContent.appendChild(mainLinePath);
+                
+                // Now add all the stations AFTER the soil and metro line
+                line.stops.forEach((stop, index) => {
+                    const currentX = stop.calculatedX;
+                    const altitudeY = stop.calculatedAltitudeY;
+                    const depthY = stop.calculatedDepthY;
+                    
+                    // Check if station is below sea level
+                    const isBelowSeaLevel = depthY > SEA_LEVEL_Y;
+
+                    // Create station group
+                    const stationGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                    stationGroup.setAttribute("class", "station-detail");
+                    stationGroup.setAttribute("data-station", stop.name);
+                    
+                    // Make station clickable
+                    stationGroup.addEventListener('click', () => {
+                        this.showStationInfo(lineName, stop.name);
+                    });
+                    
+                    // Add vertical line from ground to station
+                    const stationDepthLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    stationDepthLine.setAttribute("x1", currentX);
+                    stationDepthLine.setAttribute("y1", altitudeY);
+                    stationDepthLine.setAttribute("x2", currentX);
+                    stationDepthLine.setAttribute("y2", depthY);
+                    stationDepthLine.setAttribute("stroke", "#666");
+                    stationDepthLine.setAttribute("stroke-width", "1");
+                    stationDepthLine.setAttribute("stroke-dasharray", "3,3");
+                    stationGroup.appendChild(stationDepthLine);
+                    
+                    // Create stop marker at the correct depth
+                    const station = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    station.setAttribute("cx", currentX);
+                    station.setAttribute("cy", depthY);
+                    station.setAttribute("r", "8");
+                    station.setAttribute("fill", line.color);
+                    station.classList.add('stop-marker');
+                    stationGroup.appendChild(station);
+
+                    // Add stop name
+                    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    text.setAttribute("x", currentX);
+                    text.setAttribute("y", depthY + 20);
+                    text.setAttribute("text-anchor", "middle");
+                    text.setAttribute("class", "station-label");
+                    text.textContent = stop.name;
+                    stationGroup.appendChild(text);
+
+                    // Add depth label (depth from ground level)
+                    const depthText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    depthText.setAttribute("x", currentX);
+                    depthText.setAttribute("y", depthY - 15);
+                    depthText.setAttribute("text-anchor", "middle");
+                    depthText.setAttribute("class", "info-label");
+                    depthText.textContent = `${stop.depth}m depth`;
+                    stationGroup.appendChild(depthText);
+
+                    // Add altitude label
+                    const altText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    altText.setAttribute("x", currentX);
+                    altText.setAttribute("y", altitudeY - 5);
+                    altText.setAttribute("text-anchor", "middle");
+                    altText.setAttribute("class", "info-label");
+                    altText.textContent = `${stop.altitude}m altitude`;
+                    stationGroup.appendChild(altText);
+
+                    // Add ground level marker
+                    const groundMarker = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    groundMarker.setAttribute("x", currentX - 15);
+                    groundMarker.setAttribute("y", altitudeY - 2);
+                    groundMarker.setAttribute("width", "30");
+                    groundMarker.setAttribute("height", "4");
+                    groundMarker.setAttribute("fill", "#8B6B4A"); // Match topsoil color
+                    stationGroup.appendChild(groundMarker);
+
+                    // Add below sea level indicator with absolute depth below sea level
+                    if (isBelowSeaLevel) {
+                        const belowSeaText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        belowSeaText.setAttribute("x", currentX);
+                        belowSeaText.setAttribute("y", depthY + 35);
+                        belowSeaText.setAttribute("text-anchor", "middle");
+                        belowSeaText.setAttribute("class", "below-sea-label");
+                        
+                        // Calculate absolute depth below sea level
+                        const depthBelowSea = Math.abs(stop.altitude) + stop.depth;
+                        belowSeaText.textContent = `${depthBelowSea}m below sea level`;
+                        stationGroup.appendChild(belowSeaText);
+                    }
+
+                    // Add distance from previous if not first stop
+                    if (index > 0 && stop.distanceFromPrevious) {
+                        const distanceText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        const prevX = currentX - (stop.distanceFromPrevious * HORIZONTAL_SCALE);
+                        distanceText.setAttribute("x", prevX + (currentX - prevX) / 2);
+                        distanceText.setAttribute("y", SEA_LEVEL_Y + 180);
+                        distanceText.setAttribute("text-anchor", "middle");
+                        distanceText.setAttribute("class", "info-label");
+                        distanceText.textContent = `[${stop.distanceFromPrevious}m between stops]`;
+                        stationGroup.appendChild(distanceText);
+                    }
+                    
+                    scrollableContent.appendChild(stationGroup);
+                });
+                
+                // Add vertical scale title
+                const scaleTitle = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                scaleTitle.setAttribute("x", "50");
+                scaleTitle.setAttribute("y", SEA_LEVEL_Y - maxAltitudePadded * VERTICAL_SCALE - 30);
+                scaleTitle.setAttribute("text-anchor", "middle");
+                scaleTitle.setAttribute("font-size", "12");
+                scaleTitle.setAttribute("font-weight", "bold");
+                scaleTitle.textContent = "Elevation (m)";
+                scrollableContent.appendChild(scaleTitle);
+                
+                // Add sea level label
+                const seaLevelText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                seaLevelText.setAttribute("x", "60");
+                seaLevelText.setAttribute("y", SEA_LEVEL_Y - 5);
+                seaLevelText.setAttribute("font-size", "12");
+                seaLevelText.setAttribute("fill", "#0077be");
+                seaLevelText.setAttribute("font-weight", "bold");
+                seaLevelText.textContent = "Sea Level (0m)";
+                scrollableContent.appendChild(seaLevelText);
+                
+                // Add vertical scale explanation
+                const scaleExplanation = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                scaleExplanation.setAttribute("x", "50");
+                scaleExplanation.setAttribute("y", SEA_LEVEL_Y + maxDepthPadded * VERTICAL_SCALE + 30);
+                scaleExplanation.setAttribute("text-anchor", "middle");
+                scaleExplanation.setAttribute("font-size", "10");
+                scaleExplanation.setAttribute("fill", "#555");
+                scaleExplanation.textContent = "Vertical scale: 1px = " + (1/VERTICAL_SCALE) + "m";
+                scrollableContent.appendChild(scaleExplanation);
+                
+                // Add soil layers legend
+                const soilLegendGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                soilLegendGroup.setAttribute("transform", `translate(${currentX + 50}, ${SEA_LEVEL_Y - 100})`);
+                
+                // Update the legend to show the three levels
+                const legendTitle = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                legendTitle.setAttribute("x", "0");
+                legendTitle.setAttribute("y", "0");
+                legendTitle.setAttribute("font-size", "12");
+                legendTitle.setAttribute("font-weight", "bold");
+                legendTitle.textContent = "Legend";
+                soilLegendGroup.appendChild(legendTitle);
+                
+                // Topsoil (above sea level)
+                const topsoilRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                topsoilRect.setAttribute("x", "0");
+                topsoilRect.setAttribute("y", "10");
+                topsoilRect.setAttribute("width", "20");
+                topsoilRect.setAttribute("height", "15");
+                topsoilRect.setAttribute("fill", "#8B6B4A"); // Darker brown for topsoil
+                soilLegendGroup.appendChild(topsoilRect);
+                
+                const topsoilText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                topsoilText.setAttribute("x", "25");
+                topsoilText.setAttribute("y", "22");
+                topsoilText.setAttribute("font-size", "10");
+                topsoilText.textContent = "Soil above sea level";
+                soilLegendGroup.appendChild(topsoilText);
+                
+                // Subsoil (below sea level)
+                const subsoilRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                subsoilRect.setAttribute("x", "0");
+                subsoilRect.setAttribute("y", "30");
+                subsoilRect.setAttribute("width", "20");
+                subsoilRect.setAttribute("height", "15");
+                subsoilRect.setAttribute("fill", "#BFB3A8"); // Much lighter brown for subsoil
+                soilLegendGroup.appendChild(subsoilRect);
+                
+                const subsoilText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                subsoilText.setAttribute("x", "25");
+                subsoilText.setAttribute("y", "42");
+                subsoilText.setAttribute("font-size", "10");
+                subsoilText.textContent = "Soil below sea level";
+                soilLegendGroup.appendChild(subsoilText);
+                
+                // Below sea level water area
+                const belowSeaRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                belowSeaRect.setAttribute("x", "0");
+                belowSeaRect.setAttribute("y", "50");
+                belowSeaRect.setAttribute("width", "20");
+                belowSeaRect.setAttribute("height", "15");
+                belowSeaRect.setAttribute("fill", "rgba(0, 119, 190, 0.2)");
+                soilLegendGroup.appendChild(belowSeaRect);
+                
+                const belowSeaText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                belowSeaText.setAttribute("x", "25");
+                belowSeaText.setAttribute("y", "62");
+                belowSeaText.setAttribute("font-size", "10");
+                belowSeaText.textContent = "Subsea level";
+                soilLegendGroup.appendChild(belowSeaText);
+
+                // Update the background height for three items
+                const legendBackground = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                legendBackground.setAttribute("x", "-10");
+                legendBackground.setAttribute("y", "-20");
+                legendBackground.setAttribute("width", "140"); // Made wider for longer text
+                legendBackground.setAttribute("height", "100"); // Increased height for three items
+                legendBackground.setAttribute("fill", "rgba(255, 255, 255, 0.9)");
+                legendBackground.setAttribute("rx", "5");
+                legendBackground.setAttribute("ry", "5");
+                soilLegendGroup.insertBefore(legendBackground, soilLegendGroup.firstChild);
+                
+                scrollableContent.appendChild(soilLegendGroup);
+
+                // Set the SVG viewBox to ensure proper scaling
+                const detailedLine = document.getElementById('detailed-line');
+                detailedLine.setAttribute('viewBox', `0 0 ${currentX + 200} 600`);
+                detailedLine.setAttribute('width', currentX + 200);
+                
+                // Set the scrollable content width to ensure scrolling works
+                scrollableContent.setAttribute('transform', `translate(0,0)`);
+                
+                // Ensure the zoom container has enough width for scrolling
+                document.getElementById('zoom-container').style.minWidth = `${currentX + 200}px`;
+
+                // Show detailed view with animation
+                const detailedView = document.getElementById('detailed-view');
+                detailedView.style.transform = 'translateY(0)';
+                detailedView.style.opacity = '1';
+                
+                // After rendering the detailed view:
+                //document.getElementById('apply-filter').onclick = () => this.applyFilters(lineName);
+                //document.getElementById('clear-filter').onclick = () => this.clearFilters(lineName);
+                document.getElementById('filters-button').onclick = (e) => {
+                    e.stopPropagation();
+                    document.getElementById('filter-popup').style.display = 'block';
+                };
+
+                document.getElementById('close-filters').onclick = () => {
+                    document.getElementById('filter-popup').style.display = 'none';
+                };
+
+                // Close popup when clicking outside
+                document.body.addEventListener('click', (event) => {
+                    const popup = document.getElementById('filter-popup');
+                    const filtersButton = document.getElementById('filters-button');
+                    if (!popup.contains(event.target) && event.target !== filtersButton) {
+                        popup.style.display = 'none';
+                    }
+                });
+
+                // Attach filter functionality
+                document.getElementById('apply-filter').onclick = () => {
+                    this.applyFilters(this.currentLine);
+                    document.getElementById('filter-popup').style.display = 'none';
+                };
+                document.getElementById('clear-filter').onclick = () => {
+                    this.clearFilters(this.currentLine);
+                    document.getElementById('filter-popup').style.display = 'none';
+                };
+                
+                // Reset transition flag after animation completes
+                setTimeout(() => {
+                    this.isTransitioning = false;
+                }, 500);
+
+                // After setting up everything, show scroll indicator if needed
+                setTimeout(() => {
+                    const zoomContainer = document.getElementById('zoom-container');
+                    const scrollIndicator = document.getElementById('scroll-indicator');
+                    if (zoomContainer.scrollWidth > zoomContainer.clientWidth) {
+                        scrollIndicator.style.opacity = "1";
+                        // Hide the indicator after 3 seconds
+                        setTimeout(() => {
+                            scrollIndicator.style.opacity = "0";
+                        }, 3000);
+                    }
+                }, 600);
+            }
+            
+            returnToMap() {
+                if (this.isTransitioning) return;
+                this.isTransitioning = true;
+                
+                const detailedView = document.getElementById('detailed-view');
+                detailedView.style.transform = 'translateY(100%)';
+                detailedView.style.opacity = '0';
+                
+                // Reset transition flag after animation completes
+                setTimeout(() => {
+                    this.isTransitioning = false;
+                    this.currentLine = null;
+                }, 500);
+            }
+            
+            // Helper function to determine if a color is light or dark
+            isLightColor(hexColor) {
+                // Convert hex to RGB
+                const r = parseInt(hexColor.substr(1, 2), 16);
+                const g = parseInt(hexColor.substr(3, 2), 16);
+                const b = parseInt(hexColor.substr(5, 2), 16);
+                
+                // Calculate brightness (perceived)
+                const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+                
+                // Return true if light, false if dark
+                return brightness > 128;
+            }
+
+            // New method to handle line highlighting
+            highlightLine(lineName, highlight) {
+                const line = document.getElementById(`line-${lineName}`);
+                if (line) {
+                    line.setAttribute('stroke-width', highlight ? '8' : '6');
+                    line.style.filter = highlight ? 'drop-shadow(0 0 3px rgba(0,0,0,0.3))' : 'none';
+                }
+            }
+            
+            // Method to show line info popup
+            showLineInfo(lineName) {
+                const line = this.metroData.lines[lineName];
+                if (!line) return;
+                
+                // Set popup title
+                document.getElementById('popup-line-name').textContent = line.name;
+                
+                // Set popup content with actual data from JSON
+                const popupContent = document.getElementById('popup-content');
+                popupContent.innerHTML = `
+                    <div class="info-section">
+                        <h3>Line Overview</h3>
+                        <p>The ${line.name} spans a total length of ${line.info.length} kilometers and serves ${line.info.stations} stations.</p>
+                    </div>
+                    <div class="info-section">
+                        <h3>Historical Background</h3>
+                        <p>Opened in ${line.info.yearOpened}, ${line.info.history}</p>
+                    </div>
+                    <div class="info-section">
+                        <h3>Technical Specifications</h3>
+                        <p>The line operates at a maximum depth of ${Math.max(...line.stops.map(stop => stop.depth))} meters below ground level and reaches elevations of up to ${Math.max(...line.stops.map(stop => stop.altitude))} meters above sea level.</p>
+                        <p>Trains operate at an average speed of ${line.info.averageSpeed} km/h using ${line.info.rollingStock}.</p>
+                    </div>
+                    <div class="info-section">
+                        <h3>Interesting Facts</h3>
+                        <p>This line intersects with ${this.metroData.transferStations.filter(ts => ts.lines.includes(lineName)).length} other metro lines, making it a crucial part of the ${this.metroData.metroName} network.</p>
+                        <p>The deepest station on this line is ${line.stops.reduce((prev, current) => (prev.depth > current.depth) ? prev : current).name} at ${Math.max(...line.stops.map(stop => stop.depth))} meters below ground level.</p>
+                    </div>
+                `;
+                
+                // Show popup and overlay
+                document.getElementById('popup-overlay').style.display = 'block';
+                document.getElementById('line-info-popup').style.display = 'block';
+            }
+            
+            // Method to hide line info popup
+            hideLineInfo() {
+                document.getElementById('popup-overlay').style.display = 'none';
+                document.getElementById('line-info-popup').style.display = 'none';
+            }
+            
+            // Method to show station info popup
+            showStationInfo(lineName, stationName) {
+                const line = this.metroData.lines[lineName];
+                if (!line) return;
+                
+                const station = line.stops.find(stop => stop.name === stationName);
+                if (!station) return;
+                
+                // Set station color indicator
+                const stationColor = document.getElementById('station-color');
+                stationColor.style.backgroundColor = line.color;
+                
+                // Set popup title
+                document.getElementById('popup-station-name').textContent = station.name;
+                
+                // Check if this is a transfer station
+                const transferStation = this.metroData.transferStations.find(ts => ts.name === station.name);
+                const transferLines = transferStation ? 
+                    transferStation.lines.filter(l => l !== lineName) : 
+                    [];
+                
+                // Set popup content with station data
+                const stationContent = document.getElementById('station-info-content');
+                stationContent.innerHTML = `
+                    <div class="info-row">
+                        <div class="info-label">Line:</div>
+                        <div class="info-value">${line.name}</div>
+                    </div>
+                    ${transferStation ? `
+                    <div class="info-row">
+                        <div class="info-label">Transfer to:</div>
+                        <div class="info-value">${transferLines.map(l => this.metroData.lines[l].name).join(', ')}</div>
+                    </div>
+                    ` : ''}
+                    <div class="info-row">
+                        <div class="info-label">Depth:</div>
+                        <div class="info-value">${station.depth} meters below ground</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Altitude:</div>
+                        <div class="info-value">${station.altitude} meters above sea level</div>
+                    </div>
+                    ${station.altitude < 0 || (station.altitude - station.depth < 0) ? `
+                    <div class="info-row">
+                        <div class="info-label">Below Sea Level:</div>
+                        <div class="info-value">${Math.max(Math.abs(station.altitude), Math.abs(station.altitude - station.depth))} meters</div>
+                    </div>
+                    ` : ''}
+                    ${station.distanceFromPrevious ? `
+                    <div class="info-row">
+                        <div class="info-label">Distance from previous:</div>
+                        <div class="info-value">${station.distanceFromPrevious} meters</div>
+                    </div>
+                    ` : ''}
+                    <div class="info-row">
+                        <div class="info-label">Opening Year:</div>
+                        <div class="info-value">${station.info.openingYear}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Daily Passengers:</div>
+                        <div class="info-value">${station.info.dailyPassengers.toLocaleString()}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Platform Type:</div>
+                        <div class="info-value">${station.info.platformType}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Accessibility:</div>
+                        <div class="info-value">${station.info.accessibility}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Facilities:</div>
+                        <div class="info-value">${station.info.facilities.join(', ')}</div>
+                    </div>
+                    ${transferStation ? `
+                    <div class="info-row">
+                        <div class="info-label">Additional Info:</div>
+                        <div class="info-value">${transferStation.info.description}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Connections:</div>
+                        <div class="info-value">${transferStation.info.connections.join(', ')}</div>
+                    </div>
+                    ` : ''}
+                `;
+                
+                // Show popup and overlay
+                document.getElementById('popup-overlay').style.display = 'block';
+                document.getElementById('station-info-popup').style.display = 'block';
+                
+                // Hide line info popup if it's open
+                document.getElementById('line-info-popup').style.display = 'none';
+            }
+            
+            // Method to hide station info popup
+            hideStationInfo() {
+                document.getElementById('popup-overlay').style.display = 'none';
+                document.getElementById('station-info-popup').style.display = 'none';
+            }
+            
+            // Method to setup hover effects for stations
+            setupStationHoverEffects() {
+                // For regular stations
+                const stationGroups = document.querySelectorAll('.station-group');
+                stationGroups.forEach(group => {
+                    const lineName = group.getAttribute('data-line');
+                    
+                    group.addEventListener('mouseenter', () => {
+                        this.highlightLine(lineName, true);
+                    });
+                    
+                    group.addEventListener('mouseleave', () => {
+                        this.highlightLine(lineName, false);
+                    });
+                });
+                
+                // For transfer stations
+                const transferStationGroups = document.querySelectorAll('.transfer-station-group');
+                transferStationGroups.forEach(group => {
+                    const stationName = group.getAttribute('data-station');
+                    const station = this.metroData.transferStations.find(ts => ts.name === stationName);
+                    
+                    if (station) {
+                        group.addEventListener('mouseenter', () => {
+                            station.lines.forEach(lineName => {
+                                this.highlightLine(lineName, true);
+                            });
+                        });
+                        
+                        group.addEventListener('mouseleave', () => {
+                            station.lines.forEach(lineName => {
+                                this.highlightLine(lineName, false);
+                            });
+                        });
+                    }
+                });
+            }
+
+            init(jsonPath) {
+                // Load data first, then initialize visualization
+                this.loadMetroData(jsonPath);
+                
+                // Add click listener to back button
+                const backButton = document.getElementById('back-button');
+                backButton.addEventListener('click', () => {
+                    this.returnToMap();
+                });
+                
+                // Add click listener to info button
+                const infoButton = document.getElementById('info-button');
+                infoButton.addEventListener('click', () => {
+                    if (this.currentLine) {
+                        this.showLineInfo(this.currentLine);
+                    }
+                });
+                
+                // Add click listener to popup close buttons
+                const closeButton = document.querySelector('#line-info-popup .close-button');
+                closeButton.addEventListener('click', () => {
+                    this.hideLineInfo();
+                });
+                
+                const stationCloseButton = document.querySelector('#station-info-popup .close-button');
+                stationCloseButton.addEventListener('click', () => {
+                    this.hideStationInfo();
+                });
+                
+                // Add click listener to overlay for closing popup
+                const overlay = document.getElementById('popup-overlay');
+                overlay.addEventListener('click', () => {
+                    this.hideLineInfo();
+                    this.hideStationInfo();
+                });
+                
+                // Add keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        if (document.getElementById('line-info-popup').style.display === 'block') {
+                            this.hideLineInfo();
+                        } else if (document.getElementById('station-info-popup').style.display === 'block') {
+                            this.hideStationInfo();
+                        } else if (this.currentLine) {
+                            this.returnToMap();
+                        }
+                    }
+                    
+                    if (this.currentLine) {
+                        const zoomContainer = document.getElementById('zoom-container');
+                        const scrollAmount = 100;
+                        
+                        if (e.key === 'ArrowRight') {
+                            zoomContainer.scrollLeft += scrollAmount;
+                            e.preventDefault();
+                        } else if (e.key === 'ArrowLeft') {
+                            zoomContainer.scrollLeft -= scrollAmount;
+                            e.preventDefault();
+                        }
+                    }
+                });
+                
+                // Add scroll wheel horizontal scrolling support
+                document.getElementById('zoom-container').addEventListener('wheel', (e) => {
+                    if (this.currentLine && e.deltaY !== 0) {
+                        e.preventDefault();
+                        document.getElementById('zoom-container').scrollLeft += e.deltaY;
+                    }
+                }, { passive: false });
+            }
+        }
+
+        // Initialize the visualizer when the page loads
+        window.addEventListener('load', () => {
+            const mapSvg = document.getElementById('metro-map');
+            const detailedSvg = document.getElementById('detailed-line');
+            const visualizer = new MetroVisualizer(mapSvg, detailedSvg);
+            visualizer.init('http://localhost:8000/metro-data.json');  // Use the full URL
+        });
+    </script>
+</body>
+</html>
