@@ -1,0 +1,326 @@
+{
+  "metroName": "Kyiv Metro",
+  "metroInfo": {
+    "description": "The Rome Metro (Italian: Metropolitana di Roma) is a rapid transit system that operates in Rome, Italy. It started operation in 1955, making it the oldest metro system in Italy.",
+    "yearOpened": 1955,
+    "totalLength": 60,
+    "totalStations": 73,
+    "dailyRidership": 1500000,
+    "website": "https://www.atac.roma.it/",
+    "operatingHours": "5:30 AM - 11:30 PM",
+    "ticketPrice": "€1.50 (valid for 100 minutes)"
+  },
+  "lines": {
+    "A": {
+      "color": "#FF0000",
+      "name": "Line A - Red Line",
+      "info": {
+        "yearOpened": 1980,
+        "length": 18.5,
+        "stations": 27,
+        "averageSpeed": 32,
+        "rollingStock": "MA-300 trains",
+        "history": "Line A was the second line of the Rome Metro system, opened in 1980 to connect the eastern and western parts of the city."
+      },
+      "stops": [
+        {
+          "name": "Vokzalna", 
+          "mapX": 100, "mapY": 200,  
+          "depth": 20,  
+          "altitude": 50,
+          "info": {
+            "openingYear": 1961,
+            "dailyPassengers": 35000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms"]
+          }
+        },
+        {
+          "name": "Universytet", 
+          "mapX": 200, "mapY": 200, 
+          "depth": 25, 
+          "altitude": 55,
+          "distanceFromPrevious": 1500,
+          "info": {
+            "openingYear": 1961,
+            "dailyPassengers": 28000,
+            "platformType": "Side",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Khreshchatyk", 
+          "mapX": 400, "mapY": 200, 
+          "depth": 30, 
+          "altitude": 60,
+          "distanceFromPrevious": 1200,
+          "info": {
+            "openingYear": 1961,
+            "dailyPassengers": 22000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms"]
+          }
+        },
+        {
+          "name": "Arsenalna", 
+          "mapX": 500, "mapY": 400, 
+          "depth": 25, 
+          "altitude": 55,
+          "distanceFromPrevious": 1300,
+          "info": {
+            "openingYear": 1961,
+            "dailyPassengers": 150000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms", "Shopping", "Food court"]
+          }
+        },
+        {
+          "name": "Dnipro", 
+          "mapX": 600, "mapY": 100,  
+          "depth": 26,  
+          "altitude": 57,
+          "distanceFromPrevious": 1400,
+          "info": {
+            "openingYear": 1961,
+            "dailyPassengers": 45000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        }
+      ]
+    },
+    "B": {
+      "color": "#0000FF",
+      "name": "Line B - Blue Line",
+      "info": {
+        "yearOpened": 1955,
+        "length": 23.6,
+        "stations": 26,
+        "averageSpeed": 30,
+        "rollingStock": "MB-100 trains",
+        "history": "Line B was the first line of the Rome Metro system, opened in 1955 for the 1960 Summer Olympics."
+      },
+      "stops": [
+        {
+          "name": "Rebibbia", 
+          "mapX": 50, "mapY": 400,  
+          "depth": 22,  
+          "altitude": 45,
+          "info": {
+            "openingYear": 1990,
+            "dailyPassengers": 25000,
+            "platformType": "Side",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Castro Pretorio", 
+          "mapX": 250, "mapY": 400, 
+          "depth": 28, 
+          "altitude": 52,
+          "distanceFromPrevious": 1700,
+          "info": {
+            "openingYear": 1955,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Termini", 
+          "mapX": 450, "mapY": 400, 
+          "depth": 25, 
+          "altitude": 55,
+          "distanceFromPrevious": 1300,
+          "info": {
+            "openingYear": 1955,
+            "dailyPassengers": 150000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms", "Shopping", "Food court"]
+          }
+        },
+        {
+          "name": "Colosseo", 
+          "mapX": 650, "mapY": 300, 
+          "depth": 32, 
+          "altitude": 60,
+          "distanceFromPrevious": 1000,
+          "info": {
+            "openingYear": 1955,
+            "dailyPassengers": 80000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Tourist information"]
+          }
+        }
+      ]
+    },
+    "C": {
+      "color": "#00FF00",
+      "name": "Line C - Green Line",
+      "info": {
+        "yearOpened": 2014,
+        "length": 15.8,
+        "stations": 22,
+        "averageSpeed": 35,
+        "rollingStock": "Driverless trains",
+        "history": "Line C is the newest line of the Rome Metro, with the first section opened in 2014. It's the first fully automated line in the system."
+      },
+      "stops": [
+        {
+          "name": "San Giovanni", 
+          "mapX": 600, "mapY": 100,  
+          "depth": 26,  
+          "altitude": 57,
+          "info": {
+            "openingYear": 2018,
+            "dailyPassengers": 45000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Archaeological exhibits"]
+          }
+        },
+        {
+          "name": "Malatesta", 
+          "mapX": 500, "mapY": 250, 
+          "depth": 30, 
+          "altitude": 52,
+          "distanceFromPrevious": 1200,
+          "info": {
+            "openingYear": 2015,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Alessandrino", 
+          "mapX": 600, "mapY": 400, 
+          "depth": 35, 
+          "altitude": 48,
+          "distanceFromPrevious": 1500,
+          "info": {
+            "openingYear": 2014,
+            "dailyPassengers": 15000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        }
+      ]
+    },
+    "D": {
+      "color": "#FF00FF",
+      "name": "Line D - Coastal Line",
+      "info": {
+        "yearOpened": 2005,
+        "length": 12.5,
+        "stations": 15,
+        "averageSpeed": 28,
+        "rollingStock": "MD-200 trains",
+        "history": "Line D connects the city center with the coastal areas, featuring several underwater sections."
+      },
+      "stops": [
+        {
+          "name": "Coastal Station", 
+          "mapX": 150, "mapY": 350,  
+          "depth": 15,
+          "altitude": 10,
+          "info": {
+            "openingYear": 2005,
+            "dailyPassengers": 22000,
+            "platformType": "Side",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Beach access"]
+          }
+        },
+        {
+          "name": "Lagoon Stop", 
+          "mapX": 250, "mapY": 300, 
+          "depth": 5, 
+          "altitude": -3,
+          "distanceFromPrevious": 1200,
+          "info": {
+            "openingYear": 2005,
+            "dailyPassengers": 12000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines", "Viewing windows"]
+          }
+        },
+        {
+          "name": "Underwater Station", 
+          "mapX": 350, "mapY": 350, 
+          "depth": 25, 
+          "altitude": -5,
+          "distanceFromPrevious": 1000,
+          "info": {
+            "openingYear": 2005,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Underwater viewing gallery"]
+          }
+        },
+        {
+          "name": "Colosseo", 
+          "mapX": 650, "mapY": 300, 
+          "depth": 32, 
+          "altitude": 60,
+          "distanceFromPrevious": 1300,
+          "info": {
+            "openingYear": 2005,
+            "dailyPassengers": 80000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Tourist information"]
+          }
+        }
+      ]
+    }
+  },
+  "transferStations": [
+    {
+      "name": "Termini",
+      "lines": ["A", "B"],
+      "mapX": 450, 
+      "mapY": 400,
+      "info": {
+        "description": "Termini is the main railway station of Rome and a major interchange between Lines A and B.",
+        "connections": ["National Railways", "Airport Express", "Bus Terminal"],
+        "facilities": ["Shopping Center", "Food Court", "Tourist Information", "Left Luggage"]
+      }
+    },
+    {
+      "name": "San Giovanni",
+      "lines": ["A", "C"],
+      "mapX": 600, 
+      "mapY": 100,
+      "info": {
+        "description": "San Giovanni is a major interchange between Lines A and C, featuring archaeological exhibits from excavations during construction.",
+        "connections": ["Bus Lines", "Tram"],
+        "facilities": ["Archaeological Exhibits", "Shopping", "Cafes"]
+      }
+    },
+    {
+      "name": "Colosseo",
+      "lines": ["B", "D"],
+      "mapX": 650, 
+      "mapY": 300,
+      "info": {
+        "description": "Colosseo station serves the famous Colosseum and Roman Forum, connecting Lines B and D.",
+        "connections": ["Bus Lines", "Tourist Buses"],
+        "facilities": ["Tourist Information", "Guided Tour Booking", "Souvenir Shop"]
+      }
+    }
+  ]
+} 
