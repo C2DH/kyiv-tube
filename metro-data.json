@@ -13,7 +13,7 @@
   "lines": {
     "A": {
       "color": "#FF0000",
-      "name": "Line A - Red Line",
+      "name": "Red Line",
       "info": {
         "yearOpened": 1980,
         "length": 18.5,
@@ -24,10 +24,10 @@
       },
       "stops": [
         {
-          "name": "Battistini", 
-          "mapX": 0, "mapY": 0,  
+          "name": "Vokzalna", 
+          "mapX": 250, "mapY": 200,  
           "depth": 20,  
-          "altitude": 50,
+          "altitude": 128,
           "info": {
             "openingYear": 1990,
             "dailyPassengers": 35000,
