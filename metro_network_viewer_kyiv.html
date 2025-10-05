@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<title>Metro Network Viewer</title>
-<style>
+    <meta charset="UTF-8">
+    <title>Metro Network Viewer</title>
+    <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
@@ -365,41 +364,47 @@
         }
     </style>
 </head>
-<body><canvas height="600" id="metroCanvas" style="border:1px solid #ccc;" width="800"></canvas>
-<div id="metro-container">
-<!-- Main map view -->
-<div id="map-title">Metro Network Visualizer</div>
-<svg height="100%" id="metro-map" preserveaspectratio="xMidYMid meet" viewbox="0 0 800 600" width="100%">
-<!-- Background will be dynamically populated -->
-</svg>
-<!-- Legend for the main map -->
-<div id="legend"></div>
-<!-- Detailed line view -->
-<div id="detailed-view">
-<div id="line-header">
-<button id="back-button">← Back to Map</button>
-<div id="line-name"></div>
-<!-- Filters -->
-<button id="filters-button">⚙️ Filters</button>
-<button id="info-button">
-<svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
-<circle cx="12" cy="12" r="10"></circle>
-<line x1="12" x2="12" y1="16" y2="12"></line>
-<line x1="12" x2="12.01" y1="8" y2="8"></line>
-</svg>
+<body>
+    <div id="metro-container">
+        <!-- Main map view -->
+        <div id="map-title">Metro Network Visualizer</div>
+        <svg id="metro-map" width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid meet">
+            <!-- Background will be dynamically populated -->
+        </svg>
+        
+        <!-- Legend for the main map -->
+        <div id="legend"></div>
+
+        <!-- Detailed line view -->
+        <div id="detailed-view">
+            <div id="line-header">
+                <button id="back-button">← Back to Map</button>
+                <div id="line-name"></div>
+                
+                <!-- Filters -->
+                <button id="filters-button">⚙️ Filters</button>
+
+                <button id="info-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
                     Line Info
                 </button>
-</div>
-<div id="zoom-container">
-<svg id="detailed-line" preserveaspectratio="xMinYMid meet">
-<g id="scrollable-content">
-<!-- Detailed line will be dynamically populated -->
-</g>
-</svg>
-</div>
-</div>
-<!-- Filter popup -->
-<div id="filter-popup" style="
+            </div>
+            <div id="zoom-container">
+                <svg id="detailed-line" preserveAspectRatio="xMinYMid meet">
+                    <g id="scrollable-content">
+                        <!-- Detailed line will be dynamically populated -->
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+
+        <!-- Filter popup -->
+        <div id="filter-popup" style="
             position: absolute;
             top: 60px;
             right: 20px;
@@ -410,54 +415,58 @@
             z-index: 200;
             display: none;
         ">
-<div style="display:flex;justify-content:space-between;align-items:center;">
-<strong style="font-size:16px;">Filters</strong>
-<button id="close-filters" style="border:none;background:none;font-size:16px;cursor:pointer;">✕</button>
-</div>
-<div style="margin-top:10px;">
-<label style="display:block;margin-bottom:5px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong style="font-size:16px;">Filters</strong>
+                <button id="close-filters" style="border:none;background:none;font-size:16px;cursor:pointer;">✕</button>
+            </div>
+            <div style="margin-top:10px;">
+                <label style="display:block;margin-bottom:5px;">
                     Opening Year:<br/>
-<input id="filter-year-start" placeholder="From year" style="width:80px;margin-right:5px;" type="number"/>
-<input id="filter-year-end" placeholder="To year" style="width:80px;" type="number"/>
-</label>
-<label style="display:block;margin-bottom:10px;">
+                    <input type="number" id="filter-year-start" placeholder="From year" style="width:80px;margin-right:5px;" />
+                    <input type="number" id="filter-year-end" placeholder="To year" style="width:80px;" />
+                </label>
+                <label style="display:block;margin-bottom:10px;">
                     Facilities:<br/>
-<select id="filter-facilities" style="width:100%;margin-top:5px;">
-<option value="">Any</option>
-<option value="Elevator">Elevator</option>
-<option value="Escalator">Escalator</option>
-<option value="Restrooms">Restrooms</option>
-<option value="Ticket machines">Ticket Machines</option>
-</select>
-</label>
-<button id="apply-filter" style="padding:6px 12px;">Apply Filter</button>
-<button id="clear-filter" style="padding:6px 12px;margin-left:5px;">Clear Filter</button>
-</div>
-</div>
-<!-- Line info popup -->
-<div id="popup-overlay"></div>
-<div id="line-info-popup">
-<button class="close-button">×</button>
-<h2 id="popup-line-name"></h2>
-<div id="popup-content">
-<!-- Content will be dynamically populated -->
-</div>
-</div>
-<!-- Station info popup -->
-<div id="station-info-popup">
-<button class="close-button">×</button>
-<div class="station-info-header">
-<div class="station-color-indicator" id="station-color"></div>
-<h2 id="popup-station-name"></h2>
-</div>
-<div id="station-info-content">
-<!-- Content will be dynamically populated -->
-</div>
-</div>
-<!-- Loading indicator -->
-<div id="loading">Loading metro data...</div>
-</div>
-<script>
+                    <select id="filter-facilities" style="width:100%;margin-top:5px;">
+                        <option value="">Any</option>
+                        <option value="Elevator">Elevator</option>
+                        <option value="Escalator">Escalator</option>
+                        <option value="Restrooms">Restrooms</option>
+                        <option value="Ticket machines">Ticket Machines</option>
+                    </select>
+                </label>
+                <button id="apply-filter" style="padding:6px 12px;">Apply Filter</button>
+                <button id="clear-filter" style="padding:6px 12px;margin-left:5px;">Clear Filter</button>
+            </div>
+        </div>
+        
+        <!-- Line info popup -->
+        <div id="popup-overlay"></div>
+        <div id="line-info-popup">
+            <button class="close-button">&times;</button>
+            <h2 id="popup-line-name"></h2>
+            <div id="popup-content">
+                <!-- Content will be dynamically populated -->
+            </div>
+        </div>
+        
+        <!-- Station info popup -->
+        <div id="station-info-popup">
+            <button class="close-button">&times;</button>
+            <div class="station-info-header">
+                <div class="station-color-indicator" id="station-color"></div>
+                <h2 id="popup-station-name"></h2>
+            </div>
+            <div id="station-info-content">
+                <!-- Content will be dynamically populated -->
+            </div>
+        </div>
+        
+        <!-- Loading indicator -->
+        <div id="loading">Loading metro data...</div>
+    </div>
+
+    <script>
         class MetroVisualizer {
             constructor(mapSvg, detailedSvg) {
                 this.mapSvg = mapSvg;
@@ -1819,78 +1828,5 @@
             visualizer.init('http://localhost:8000/metro-data.json');  // Use the full URL
         });
     </script>
-<script>
-fetch('metro-data-kyiv.json')
-  .then(response => response.json())
-  .then(data => {
-    const canvas = document.getElementById('metroCanvas');
-    const ctx = canvas.getContext('2d');
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Extract station coordinates
-    const stations = data.stations;
-    const lines = data.lines;
-    const connections = data.connections;
-
-    // Determine bounds for scaling
-    let minLat = Infinity, maxLat = -Infinity, minLng = Infinity, maxLng = -Infinity;
-    for (const id in stations) {
-      const s = stations[id];
-      minLat = Math.min(minLat, s.lat);
-      maxLat = Math.max(maxLat, s.lat);
-      minLng = Math.min(minLng, s.lng);
-      maxLng = Math.max(maxLng, s.lng);
-    }
-
-    // Padding and scale
-    const padding = 50;
-    const scaleX = (canvas.width - 2 * padding) / (maxLng - minLng);
-    const scaleY = (canvas.height - 2 * padding) / (maxLat - minLat);
-
-    // Helper to convert geo to canvas coordinates
-    function toCanvasCoords(lat, lng) {
-      const x = padding + (lng - minLng) * scaleX;
-      const y = canvas.height - (padding + (lat - minLat) * scaleY);
-      return [x, y];
-    }
-
-    // Draw connections
-    connections.forEach(([id1, id2]) => {
-      const s1 = stations[id1];
-      const s2 = stations[id2];
-      if (s1 && s2) {
-        const [x1, y1] = toCanvasCoords(s1.lat, s1.lng);
-        const [x2, y2] = toCanvasCoords(s2.lat, s2.lng);
-        const color = '#' + (lines[s1.line_id]?.hex_color || '000000');
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.stroke();
-      }
-    });
-
-    // Draw stations
-    for (const id in stations) {
-      const s = stations[id];
-      const [x, y] = toCanvasCoords(s.lat, s.lng);
-      ctx.fillStyle = '#' + (lines[s.line_id]?.hex_color || '000000');
-      ctx.beginPath();
-      ctx.arc(x, y, 5, 0, 2 * Math.PI);
-      ctx.fill();
-
-      // Draw station name
-      ctx.fillStyle = '#000';
-      ctx.font = '10px Arial';
-      ctx.fillText(s.name, x + 6, y - 6);
-    }
-  })
-  .catch(error => {
-    console.error('Error loading metro data:', error);
-    document.body.innerHTML += '<p style="color:red;">Error loading metro data. Please try again.</p>';
-  });
-</script></body>
+</body>
 </html>
