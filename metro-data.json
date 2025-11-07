@@ -1,0 +1,845 @@
+{
+  "metroName": "Kyiv Metro",
+  "metroInfo": {
+    "description": "The Kyiv Metro (Ukrainian: Київський метрополітен) The Kyiv Metro is a rapid transit system in Kyiv, Ukraine, opened in 1960. It is the first metro in Ukraine and third in the former USSR.",
+    "yearOpened": 1960,
+    "totalLength": 67.6,
+    "totalStations": 54,
+    "dailyRidership": 1760000,
+    "website": "https://metro.kyiv.ua",
+    "operatingHours": "5:30 AM - 11:30 PM",
+    "ticketPrice": "8 UAH per ride"
+  },
+  "lines": {
+    "A": {
+      "color": "#FF0000",
+      "name": "M1 - Sviatoshynsko–Brovarska Line",
+      "info": {
+        "yearOpened": 1960,
+        "length": 22.8,
+        "stations": 18,
+        "averageSpeed": 35,
+        "rollingStock": "Type D, Type E, Type 81-717/714",
+        "history": "First line of Kyiv Metro, running east-west."
+      },
+      "stops": [
+        {
+          "name": "Akademmistechko", 
+          "mapX": 10, "mapY": 375,  
+          "depth": 11,  
+          "altitude": 161,
+          "info": {
+            "openingYear": 2003,
+            "dailyPassengers": 35000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms"]
+          }
+        },
+        {
+          "name": "Zhytomyrska", 
+          "mapX": 41, "mapY": 428, 
+          "depth": 10, 
+          "altitude": 174.3,
+          "distanceFromPrevious": 1219.13,
+          "info": {
+            "openingYear": 2003,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+         "name": "Sviatoshyn", 
+          "mapX": 107, "mapY": 422, 
+          "depth": 12, 
+          "altitude": 184.4,
+          "distanceFromPrevious": 1641.28,
+          "info": {
+            "openingYear": 1971,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Nyvky", 
+          "mapX": 151, "mapY": 413, 
+          "depth": 12.5, 
+          "altitude": 180.2,
+          "distanceFromPrevious": 1096.12,
+          "info": {
+            "openingYear": 1971,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Beresteiska", 
+          "mapX": 196, "mapY": 410, 
+          "depth": 11, 
+          "altitude": 182.7,
+          "distanceFromPrevious": 1099.89,
+          "info": {
+            "openingYear": 1971,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Shuliavska", 
+          "mapX": 269, "mapY": 435, 
+          "depth": 92, 
+          "altitude": 172.7,
+          "distanceFromPrevious": 1878.08,
+          "info": {
+            "openingYear": 1963,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Politekhnichnyi Instytut", 
+          "mapX": 329, "mapY": 462, 
+          "depth": 55, 
+          "altitude": 143.2,
+          "distanceFromPrevious": 1549.68,
+          "info": {
+            "openingYear": 1963,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Vokzalna", 
+          "mapX": 393, "mapY": 520, 
+          "depth": 42, 
+          "altitude": 133.7,
+          "distanceFromPrevious": 1871.46,
+          "info": {
+            "openingYear": 1960,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Universytet", 
+          "mapX": 443, "mapY": 503, 
+          "depth": 87, 
+          "altitude": 169.1,
+          "distanceFromPrevious": 1286,
+          "info": {
+            "openingYear": 1960,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Teatralna", 
+          "mapX": 478, "mapY": 497, 
+          "depth": 70, 
+          "altitude": 159.3,
+          "distanceFromPrevious": 870.47,
+          "info": {
+            "openingYear": 1987,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Khreshchatyk", 
+          "mapX": 492, "mapY": 485, 
+          "depth": 60, 
+          "altitude": 155.6,
+          "distanceFromPrevious": 411.29,
+          "info": {
+            "openingYear": 1960,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Arsenalna", 
+          "mapX": 557, "mapY": 502, 
+          "depth": 105.5, 
+          "altitude": 193.7,
+          "distanceFromPrevious": 1625.47,
+          "info": {
+            "openingYear": 1960,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Dnipro", 
+          "mapX": 595, "mapY": 524, 
+          "depth": 0, 
+          "altitude": 108.5,
+          "distanceFromPrevious": 1016.69,
+          "info": {
+            "openingYear": 1960,
+            "dailyPassengers": 28000,
+            "platformType": "Side",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Hidropark", 
+          "mapX": 648, "mapY": 492, 
+          "depth": 0, 
+          "altitude": 98.8,
+          "distanceFromPrevious": 1414.35,
+          "info": {
+            "openingYear": 1965,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Livoberezhna", 
+          "mapX": 708, "mapY": 455, 
+          "depth": 0, 
+          "altitude": 99.7,
+          "distanceFromPrevious": 1637.32,
+          "info": {
+            "openingYear": 1965,
+            "dailyPassengers": 28000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Darnytsia", 
+          "mapX": 751, "mapY": 430, 
+          "depth": 0, 
+          "altitude": 101.4,
+          "distanceFromPrevious": 1137.05,
+          "info": {
+            "openingYear": 1965,
+            "dailyPassengers": 22000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms"]
+          }
+        },
+        {
+          "name": "Chernihivska", 
+          "mapX": 801, "mapY": 405, 
+          "depth": 0, 
+          "altitude": 101.8,
+          "distanceFromPrevious": 1315.8,
+          "info": {
+            "openingYear": 1968,
+            "dailyPassengers": 150000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms", "Shopping", "Food court"]
+          }
+        },
+        {
+          "name": "Lisova", 
+          "mapX": 846, "mapY": 374,  
+          "depth": 0,  
+          "altitude": 102,
+          "distanceFromPrevious": 1236.41,
+          "info": {
+            "openingYear": 1968,
+            "dailyPassengers": 45000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        }
+      ]
+    },
+    "B": {
+      "color": "#0000FF",
+      "name": "M2 - Obolonsko–Teremkivska Line",
+      "info": {
+        "yearOpened": 1976,
+        "length": 20.95,
+        "stations": 18,
+        "averageSpeed": 35,
+        "rollingStock": "Type D, Type E, Type 81-717/714",
+        "history": "Second line of Kyiv Metro, running north-south."
+      },
+      "stops": [
+        {
+          "name": "Heroiv Dnipra", 
+          "mapX": 423, "mapY": 10,  
+          "depth": 5,  
+          "altitude": 96.4,
+          "info": {
+            "openingYear": 1982,
+            "dailyPassengers": 25000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Minska", 
+          "mapX": 422, "mapY": 76, 
+          "depth": 8, 
+          "altitude": 98,
+          "distanceFromPrevious": 1168.23,
+          "info": {
+            "openingYear": 1982,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Obolon", 
+          "mapX": 421, "mapY": 143, 
+          "depth": 6.5, 
+          "altitude": 98.2,
+          "distanceFromPrevious": 1182.73,
+          "info": {
+            "openingYear": 1980,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Pochaina", 
+          "mapX": 420, "mapY": 240, 
+          "depth": 6, 
+          "altitude": 97.7,
+          "distanceFromPrevious": 1707.67,
+          "info": {
+            "openingYear": 1980,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Tarasa Shevchenka", 
+          "mapX": 439, "mapY": 319, 
+          "depth": 7, 
+          "altitude": 98.7,
+          "distanceFromPrevious": 1483.99,
+          "info": {
+            "openingYear": 1980,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Kontraktova Ploshcha", 
+          "mapX": 470, "mapY": 368, 
+          "depth": 8, 
+          "altitude": 104,
+          "distanceFromPrevious": 1138.19,
+          "info": {
+            "openingYear": 1976,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Poshtova Ploshcha", 
+          "mapX": 498, "mapY": 412, 
+          "depth": 10, 
+          "altitude": 110.7,
+          "distanceFromPrevious": 1049.39,
+          "info": {
+            "openingYear": 1976,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Maidan Nezalezhnosti", 
+          "mapX": 497, "mapY": 468, 
+          "depth": 60, 
+          "altitude": 153.3,
+          "distanceFromPrevious": 984.97,
+          "info": {
+            "openingYear": 1976,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Ploshcha Ukrainskykh Heroiv", 
+          "mapX": 474, "mapY": 534, 
+          "depth": 72, 
+          "altitude": 155.3,
+          "distanceFromPrevious": 1294.05,
+          "info": {
+            "openingYear": 1981,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Olimpiiska", 
+          "mapX": 473, "mapY": 579, 
+          "depth": 37, 
+          "altitude": 124,
+          "distanceFromPrevious": 794.4,
+          "info": {
+            "openingYear": 1981,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Palats Ukraina", 
+          "mapX": 488, "mapY": 652, 
+          "depth": 32, 
+          "altitude": 126.3,
+          "distanceFromPrevious": 1336.51,
+          "info": {
+            "openingYear": 1984,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Lybidska", 
+          "mapX": 498, "mapY": 699, 
+          "depth": 22, 
+          "altitude": 119.6,
+          "distanceFromPrevious": 878.44,
+          "info": {
+            "openingYear": 1984,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Demiivska", 
+          "mapX": 475, "mapY": 751, 
+          "depth": 12, 
+          "altitude": 119.6,
+          "distanceFromPrevious": 1070.01,
+          "info": {
+            "openingYear": 2010,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Holosiivska", 
+          "mapX": 450, "mapY": 799, 
+          "depth": 12, 
+          "altitude": 131.6,
+          "distanceFromPrevious": 1049.2,
+          "info": {
+            "openingYear": 2010,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Vasylkivska", 
+          "mapX": 393, "mapY": 824, 
+          "depth": 8, 
+          "altitude": 187.6,
+          "distanceFromPrevious": 1486.03,
+          "info": {
+            "openingYear": 2010,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Vystavkovyi Tsentr", 
+          "mapX": 362, "mapY": 892, 
+          "depth": 8, 
+          "altitude": 182.7,
+          "distanceFromPrevious": 1422.62,
+          "info": {
+            "openingYear": 2011,
+            "dailyPassengers": 30000,
+            "platformType": "Island",
+            "accessibility": "Partially accessible",
+            "facilities": ["Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Ipodrom", 
+          "mapX": 337, "mapY": 929, 
+          "depth": 12, 
+          "altitude": 180.4,
+          "distanceFromPrevious": 898.36,
+          "info": {
+            "openingYear": 2012,
+            "dailyPassengers": 150000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Restrooms", "Shopping", "Food court"]
+          }
+        },
+        {
+          "name": "Teremky", 
+          "mapX": 294, "mapY": 990, 
+          "depth": 12, 
+          "altitude": 185.2,
+          "distanceFromPrevious": 1524.68,
+          "info": {
+            "openingYear": 2013,
+            "dailyPassengers": 80000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Tourist information"]
+          }
+        }
+      ]
+    },
+    "C": {
+      "color": "#00FF00",
+      "name": "M3 - Syretsko–Pecherska Line",
+      "info": {
+        "yearOpened": 1989,
+        "length": 23.9,
+        "stations": 18,
+        "averageSpeed": 35,
+        "rollingStock": "Type D, Type E, Type 81-717/714",
+        "history": "Third line of Kyiv Metro, running northwest to southeast."
+      },
+      "stops": [
+        {
+          "name": "Syrets", 
+          "mapX": 228, "mapY": 301,  
+          "depth": 60,  
+          "altitude": 147,
+          "info": {
+            "openingYear": 2004,
+            "dailyPassengers": 45000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Archaeological exhibits"]
+          }
+        },
+        {
+          "name": "Dorohozhychi", 
+          "mapX": 279, "mapY": 318, 
+          "depth": 76, 
+          "altitude": 169.4,
+          "distanceFromPrevious": 1306.73,
+          "info": {
+            "openingYear": 2000,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Lukianivska", 
+          "mapX": 374, "mapY": 389, 
+          "depth": 69, 
+          "altitude": 148,
+          "distanceFromPrevious": 2665,
+          "info": {
+            "openingYear": 1996,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Lvivska Brama", 
+          "mapX": 446, "mapY": 440, 
+          "depth": 96, 
+          "altitude": 192.3,
+          "distanceFromPrevious": 1990.23,
+          "info": {
+            "openingYear": 0,
+            "dailyPassengers": 0,
+            "platformType": "Island",
+            "accessibility": "Not accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Zoloti Vorota", 
+          "mapX": 465, "mapY": 478, 
+          "depth": 96.5, 
+          "altitude": 192.8,
+          "distanceFromPrevious": 820.68,
+          "info": {
+            "openingYear": 1989,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Palats Sportu", 
+          "mapX": 486, "mapY": 541, 
+          "depth": 72, 
+          "altitude": 142.3,
+          "distanceFromPrevious": 1225.3,
+          "info": {
+            "openingYear": 1989,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Klovska", 
+          "mapX": 518, "mapY": 549, 
+          "depth": 40, 
+          "altitude": 154.9,
+          "distanceFromPrevious": 799.47,
+          "info": {
+            "openingYear": 1989,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Pecherska", 
+          "mapX": 538, "mapY": 608, 
+          "depth": 89, 
+          "altitude": 184.6,
+          "distanceFromPrevious": 1148.86,
+          "info": {
+            "openingYear": 1997,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Zvirynetska", 
+          "mapX": 556, "mapY": 667, 
+          "depth": 66, 
+          "altitude": 156.8,
+          "distanceFromPrevious": 1129.12,
+          "info": {
+            "openingYear": 1991,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Vydubychi", 
+          "mapX": 600, "mapY": 769, 
+          "depth": 8, 
+          "altitude": 99,
+          "distanceFromPrevious": 2099.52,
+          "info": {
+            "openingYear": 1991,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Telychka", 
+          "mapX": 632, "mapY": 802, 
+          "depth": 8, 
+          "altitude": 97,
+          "distanceFromPrevious": 987.2,
+          "info": {
+            "openingYear": 0,
+            "dailyPassengers": 0,
+            "platformType": "Island",
+            "accessibility": "Not accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Slavutych", 
+          "mapX": 728, "mapY": 818, 
+          "depth": 7, 
+          "altitude": 100,
+          "distanceFromPrevious": 2413.79,
+          "info": {
+            "openingYear": 1992,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Osokorky", 
+          "mapX": 760, "mapY": 812, 
+          "depth": 9, 
+          "altitude": 100.5,
+          "distanceFromPrevious": 796.78,
+          "info": {
+            "openingYear": 1992,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Pozniaky", 
+          "mapX": 813, "mapY": 795, 
+          "depth": 12, 
+          "altitude": 100.7,
+          "distanceFromPrevious": 1342.6,
+          "info": {
+            "openingYear": 1994,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Kharkivska", 
+          "mapX": 864, "mapY": 777, 
+          "depth": 8, 
+          "altitude": 99.9,
+          "distanceFromPrevious": 1292.99,
+          "info": {
+            "openingYear": 1994,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Vyrlytsia", 
+          "mapX": 904, "mapY": 764, 
+          "depth": 8, 
+          "altitude": 96.4,
+          "distanceFromPrevious": 1012.15,
+          "info": {
+            "openingYear": 2006,
+            "dailyPassengers": 18000,
+            "platformType": "Side",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+           "name": "Boryspilska", 
+          "mapX": 956, "mapY": 761, 
+          "depth": 8, 
+          "altitude": 108.1,
+          "distanceFromPrevious": 1291.02,
+          "info": {
+            "openingYear": 2005,
+            "dailyPassengers": 18000,
+            "platformType": "Island",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines"]
+          }
+        },
+        {
+          "name": "Chervonyi Khutir", 
+          "mapX": 990, "mapY": 722, 
+          "depth": 8, 
+          "altitude": 117.2,
+          "distanceFromPrevious": 1091.32,
+          "info": {
+            "openingYear": 2008,
+            "dailyPassengers": 15000,
+            "platformType": "Side",
+            "accessibility": "Fully accessible",
+            "facilities": ["Elevator", "Escalator", "Ticket machines", "Tourist information"]
+          }
+        }
+      ]
+    }
+  },
+  "transferStations": [
+    {
+      "name": "Zoloti Vorota – Teatralna",
+      "lines": ["C", "A"],
+      "mapX": 465, 
+      "mapY": 478,
+      "info": {
+        "description": "Termini is the main railway station of Rome and a major interchange between Lines A and B.",
+        "connections": ["National Railways", "Airport Express", "Bus Terminal"],
+        "facilities": ["Shopping Center", "Food Court", "Tourist Information", "Left Luggage"]
+      }
+    },
+    {
+      "name": "Maidan Nezalezhnosti – Khreshchatyk",
+      "lines": ["B", "A"],
+      "mapX": 497, 
+      "mapY": 468,
+      "info": {
+        "description": "San Giovanni is a major interchange between Lines A and C, featuring archaeological exhibits from excavations during construction.",
+        "connections": ["Bus Lines", "Tram"],
+        "facilities": ["Archaeological Exhibits", "Shopping", "Cafes"]
+      }
+    },
+    {
+      "name": "Palats Sportu – Ploshcha Ukrainskykh Heroiv",
+      "lines": ["C", "B"],
+      "mapX": 486, 
+      "mapY": 541,
+      "info": {
+        "description": "Colosseo station serves the famous Colosseum and Roman Forum, connecting Lines B and D.",
+        "connections": ["Bus Lines", "Tourist Buses"],
+        "facilities": ["Tourist Information", "Guided Tour Booking", "Souvenir Shop"]
+      }
+    }
+  ]
+} 
